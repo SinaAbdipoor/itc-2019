@@ -85,7 +85,7 @@ class Time {
     /**
      * Gets the end of this Time.
      *
-     * @return The ending timeslot of this Time.
+     * @return The ending time slot of this Time.
      */
     int calcEnd() {
         return start + length;
