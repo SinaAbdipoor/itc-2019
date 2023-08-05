@@ -30,13 +30,4 @@ record Time(boolean[] weeks, boolean[] days, int start, int length) {
         if (start < 0 || length <= 0 || (start + length > 288))
             throw new IllegalArgumentException("This start (" + start + ") and/or length (" + length + ") " + "parameter(s) are illegal!");
     }
-
-    /**
-     * Gets the end of this Time.
-     *
-     * @return The ending time slot of this Time.
-     */
-    int calcEnd() {
-        return start + length;
-    }
 }
