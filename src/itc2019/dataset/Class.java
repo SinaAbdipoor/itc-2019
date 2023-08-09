@@ -176,24 +176,23 @@ class Class {
 
     /**
      * <p>Adds the student to this class (enrolls the students in this class).</p>
-     * <strong><p>IMPORTANT: This method does NOT check the following issues:</p>
-     * <p>1) If this class is in the list of the demanded courses of the student;</p>
-     * <p>2) If the student has taken one class from each subpart of a single configuration.</p>
-     * <p>Checking mechanisms of these issues should later be added here (if possible) or in other classes.</p></strong>
+     * <strong><p>IMPORTANT: This method does NOT check if the student needs this class or if the student has taken one
+     * class from each subpart of a single configuration.</p></strong>
      *
      * @param student The student to add.
      * @throws IllegalArgumentException If this class has reached its max limit, or if the student has not taken the
-     *                                  parent class first, or if the student does not need to take this class.
-     *                                  <strong>To significantly reduce the running time, comment the if statements in
-     *                                  this method. However, doing so will allow invalid student enrollments. </strong>
+     *                                  parent class first. <strong>To significantly reduce the running time, comment
+     *                                  the if statements in this method. However, doing so will allow invalid student
+     *                                  enrollments. </strong>
      */
     void addStudent(Student student) throws IllegalArgumentException {
         //TODO (OPTIMIZATION): For faster running time, comment the following if. However, doing so will allow invalid student enrollments.
         if (students.size() == limit) throw new IllegalArgumentException("This class has reached max capacity!");
         if (parent != null && !parent.containsStudent(student))
             throw new IllegalArgumentException("The student has not taken the parent class!");
+//        if (!student.needsClass(this))
+//            throw new IllegalArgumentException("The student does not need to take this class");
         //COMMENT UNTIL HERE
-        //TODO: Add checking for the student needing this class (here or in another class).
         //TODO: Add checking for the student taking one class from each subpart of a single configuration (here or in another class).
         students.add(student);
     }
