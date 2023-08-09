@@ -118,13 +118,13 @@ class Class {
      * @param assignedTime The time period to schedule this class at.
      * @throws IllegalArgumentException If the passed time assignment is invalid. <strong>To reduce the running time
      *                                  from O(n), where n is the number of possible time assignments for this class,
-     *                                  to O(1), comment if statement in the method. However, doing so will allow
+     *                                  to O(1), comment if statement in this method. However, doing so will allow
      *                                  invalid (not included in the possible time assignments of this class) time
      *                                  assignments.</strong>
      */
     void setAssignedTime(TimeAssignment assignedTime) throws IllegalArgumentException {
         //TODO (OPTIMIZATION): For faster running time, comment the following if. However, doing so will allow invalid time assignments.
-        if (!Arrays.asList(getPossibleTimes()).contains(assignedTime))
+        if (!Arrays.asList(possibleTimes).contains(assignedTime))
             throw new IllegalArgumentException("This time assignment is invalid as it is not in the list of possible time assignment of this class!");
         //COMMENT UNTIL HERE
         this.assignedTime = assignedTime;
@@ -146,14 +146,14 @@ class Class {
      * @param assignedRoom The room to schedule this class in.
      * @throws IllegalArgumentException If this class does not require a room or if the passed room assignment is
      *                                  invalid. <strong>To reduce the running time from O(n), where n is the number
-     *                                  of possible room assignments for this class, to O(1), comment all the if
-     *                                  statements in the method. However, doing so will allow invalid room assignments.
+     *                                  of possible room assignments for this class, to O(1), comment the second if
+     *                                  statement in this method. However, doing so will allow invalid room assignments.
      *                                  </strong>
      */
     void setAssignedRoom(RoomAssignment assignedRoom) throws IllegalArgumentException {
         //TODO (OPTIMIZATION): For faster running time, comment the following if. However, doing so will allow invalid room assignments.
-        if (getPossibleRooms() == null) throw new IllegalArgumentException("This class does not require a room!");
-        if (!Arrays.asList(getPossibleRooms()).contains(assignedRoom))
+        if (possibleRooms == null) throw new IllegalArgumentException("This class does not require a room!");
+        if (!Arrays.asList(possibleRooms).contains(assignedRoom))
             throw new IllegalArgumentException("This room assignment is invalid as it is not in the list of possible room assignment of this class!");
         //COMMENT UNTIL HERE
         this.assignedRoom = assignedRoom;
@@ -165,20 +165,35 @@ class Class {
     }
 
     /**
+     * Checks if this class contains the given student.
+     *
+     * @param student The student to search for.
+     * @return True if the passed student is enrolled in this class; False otherwise.
+     */
+    boolean containsStudent(Student student) {
+        return students.contains(student);
+    }
+
+    /**
      * <p>Adds the student to this class (enrolls the students in this class).</p>
      * <strong><p>IMPORTANT: This method does NOT check the following issues:</p>
      * <p>1) If this class is in the list of the demanded courses of the student;</p>
-     * <p>2) If the student has been enrolled in the parent class of this class before being added here;</p>
-     * <p>3) If the student has taken one class from each subpart of a single configuration.</p>
+     * <p>2) If the student has taken one class from each subpart of a single configuration.</p>
      * <p>Checking mechanisms of these issues should later be added here (if possible) or in other classes.</p></strong>
      *
      * @param student The student to add.
-     * @throws IllegalArgumentException If this class has reached its max limit.
+     * @throws IllegalArgumentException If this class has reached its max limit, or if the student has not taken the
+     *                                  parent class first, or if the student does not need to take this class.
+     *                                  <strong>To significantly reduce the running time, comment the if statements in
+     *                                  this method. However, doing so will allow invalid student enrollments. </strong>
      */
     void addStudent(Student student) throws IllegalArgumentException {
-        if (students.size() == getLimit()) throw new IllegalArgumentException("This class has reached max capacity!");
+        //TODO (OPTIMIZATION): For faster running time, comment the following if. However, doing so will allow invalid student enrollments.
+        if (students.size() == limit) throw new IllegalArgumentException("This class has reached max capacity!");
+        if (parent != null && !parent.containsStudent(student))
+            throw new IllegalArgumentException("The student has not taken the parent class!");
+        //COMMENT UNTIL HERE
         //TODO: Add checking for the student needing this class (here or in another class).
-        //TODO: Add checking for the student being enrolled in the parent class (here or in another class).
         //TODO: Add checking for the student taking one class from each subpart of a single configuration (here or in another class).
         students.add(student);
     }
