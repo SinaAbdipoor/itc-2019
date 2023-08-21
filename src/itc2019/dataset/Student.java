@@ -25,22 +25,4 @@ record Student(int id, Course[] courses) {
     Student {
         if (id < 1) throw new IllegalArgumentException("Room id cannot be less than 1!");
     }
-
-    /**
-     * Checks if this student needs the passed class.
-     * <p><strong>This method has very high time complexity (O(n^4)). Avoid
-     * calling this method unless you have to. Instead, while assigning a student to a class, search the demanded
-     * courses of the student.</strong></p>
-     *
-     * @param aClass The class to search for.
-     * @return True if the passed class is in the demanded courses of this student; False otherwise.
-     */
-    boolean needsClass(Class aClass) {
-        for (Course course : courses)
-            for (Config config : course.configs())
-                for (Subpart subpart : config.subparts())
-                    for (Class theClass : subpart.classes())
-                        if (theClass.equals(aClass)) return true;
-        return false;
-    }
 }
