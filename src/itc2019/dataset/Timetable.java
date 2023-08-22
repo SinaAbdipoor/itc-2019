@@ -12,7 +12,7 @@ import java.util.Arrays;
  * element in a timetable event[0] correlates with the class with id of 1. Similarly: event[1] -> class[id=2],
  * event[2] -> class[id=3], etc.</p>
  */
-class Timetable {
+public class Timetable {
     private final Event[] events;
 
     /**

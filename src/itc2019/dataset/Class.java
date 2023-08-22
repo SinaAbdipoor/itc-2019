@@ -17,7 +17,7 @@ package itc2019.dataset;
  * is needed). Each eligible room has a specified penalty to be included in the overall time penalization when selected.
  * Valid room specifications were given in Section Rooms.</p>
  */
-record Class(int id, int limit, TimeAssignment[] possibleTimes, RoomAssignment[] possibleRooms, Class parent) {
+public record Class(int id, int limit, TimeAssignment[] possibleTimes, RoomAssignment[] possibleRooms, Class parent) {
     /**
      * Constructs a Class object.
      *
@@ -28,7 +28,7 @@ record Class(int id, int limit, TimeAssignment[] possibleTimes, RoomAssignment[]
      * @param parent        The parent class of this class. <strong>If this class is not in a parent-child relationship, pass null.</strong>
      * @throws IllegalArgumentException If the passed id or limit parameters are invalid.
      */
-    Class {
+    public Class {
         if (id < 1) throw new IllegalArgumentException("Class id cannot be less than 1!");
         if (limit < 0) throw new IllegalArgumentException("Class limit cannot be negative!");
     }
