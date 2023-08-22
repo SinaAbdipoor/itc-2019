@@ -21,7 +21,7 @@ public class Timetable {
      *
      * @param classNo Total number of classes in the problem instance.
      */
-    Timetable(int classNo) {
+    public Timetable(int classNo) {
         events = new Event[classNo];
     }
 
@@ -31,7 +31,7 @@ public class Timetable {
      * @param classId The class id of the event.
      * @return The event corresponding with the given class id.
      */
-    Event getEvent(int classId) {
+    public Event getEvent(int classId) {
         return events[classId - 1];
     }
 
@@ -45,7 +45,7 @@ public class Timetable {
      *                                  initialized, using this set method, you only need to schedule them, and you do
      *                                  not need to set them again.</strong>
      */
-    void setEvent(Event event) throws IllegalArgumentException {
+    public void setEvent(Event event) throws IllegalArgumentException {
         if (events[event.getTheClass().id() - 1] != null)
             throw new IllegalArgumentException("An event with this class id is already added!");
         events[event.getTheClass().id() - 1] = event;

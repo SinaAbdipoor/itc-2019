@@ -9,7 +9,7 @@ import java.util.Arrays;
  * <p><strong>Note that at any given moment, an event can be half or not scheduled and its time, room, and student
  * parameters can be null.</strong></p>
  */
-class Event {
+public class Event {
     private final Class theClass;
     private TimeAssignment time;
     private RoomAssignment room;
