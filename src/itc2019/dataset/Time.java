@@ -15,7 +15,7 @@ package itc2019.dataset;
  * specifies that the class would only meet during even weeks of the semester (during the 2nd, 4th, . . . , and 12th
  * weeks of the semester).</p>
  */
-record Time(boolean[] weeks, boolean[] days, int start, int length) {
+public record Time(boolean[] weeks, boolean[] days, int start, int length) {
     /**
      * Constructs a Time object.
      *
@@ -25,7 +25,7 @@ record Time(boolean[] weeks, boolean[] days, int start, int length) {
      * @param length The duration of the class in time slots (each time slot is 5 mins and there are 288 time slots in a day).
      * @throws IllegalArgumentException If the input days, start, or length parameters are invalid.
      */
-    Time {
+    public Time {
         if (days.length > 7) throw new IllegalArgumentException("There cannot be more than 7 days in a week!");
         if (start < 0 || length <= 0 || (start + length > 288))
             throw new IllegalArgumentException("This start (" + start + ") and/or length (" + length + ") " + "parameter(s) are illegal!");

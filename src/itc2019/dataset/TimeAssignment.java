@@ -3,7 +3,7 @@ package itc2019.dataset;
 /**
  * This class represents a possible time assignment for a class as defined in the ITC 2019.
  */
-record TimeAssignment(Time time, int penalty) {
+public record TimeAssignment(Time time, int penalty) {
     /**
      * Constructs a time assignment object.
      *
@@ -11,7 +11,7 @@ record TimeAssignment(Time time, int penalty) {
      * @param penalty The penalty associated with this assignment.
      * @throws IllegalArgumentException If the passed penalty is invalid.
      */
-    TimeAssignment {
+    public TimeAssignment {
         if (penalty < 0) throw new IllegalArgumentException("Penalty cannot be negative!");
     }
 }

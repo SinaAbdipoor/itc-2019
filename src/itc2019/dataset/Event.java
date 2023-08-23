@@ -11,8 +11,8 @@ import java.util.Arrays;
  */
 public class Event {
     private final Class theClass;
-    private TimeAssignment time;
-    private RoomAssignment room;
+    private TimeAssignment timeAssignment;
+    private RoomAssignment roomAssignment;
     private final ArrayList<Student> students;
 
     /**
@@ -20,7 +20,7 @@ public class Event {
      *
      * @param theClass The class to be scheduled.
      */
-    Event(Class theClass) {
+    public Event(Class theClass) {
         this.theClass = theClass;
         students = new ArrayList<>();
     }
@@ -30,7 +30,7 @@ public class Event {
      *
      * @return This event's class to be scheduled.
      */
-    Class getTheClass() {
+    public Class getTheClass() {
         return theClass;
     }
 
@@ -39,26 +39,26 @@ public class Event {
      *
      * @return Time assignment of this event. Returns null if this event is not assigned a time.
      */
-    TimeAssignment getTime() {
-        return time;
+    public TimeAssignment getTimeAssignment() {
+        return timeAssignment;
     }
 
     /**
      * Sets the time of this event.
      *
-     * @param time The time to be assigned to this event.
+     * @param timeAssignment The time to be assigned to this event.
      * @throws IllegalArgumentException If the passed time is invalid for this event.
      *                                  <p>Running time = O(n), where n is the number of possible time assignments for
      *                                  this event's class. To reduce the running time to O(1), comment the first if in
      *                                  the method. However, doing so will allow invalid (not included in the possible
      *                                  time assignments of this event's class) time assignments.</p>
      */
-    void setTime(TimeAssignment time) throws IllegalArgumentException {
+    public void setTimeAssignment(TimeAssignment timeAssignment) throws IllegalArgumentException {
         //TODO OPTIMIZATION: For faster running time, comment the following if. However, doing so will allow invalid (not included in the possible time assignments of this event's class) time assignments.
-        if (!Arrays.asList(theClass.possibleTimes()).contains(time))
+        if (!Arrays.asList(theClass.possibleTimes()).contains(timeAssignment))
             throw new IllegalArgumentException("The passed time does not exist in the possible time assignments of this class!");
         // COMMENT UNTIL HERE!
-        this.time = time;
+        this.timeAssignment = timeAssignment;
     }
 
     /**
@@ -68,14 +68,14 @@ public class Event {
      * @return Room assignment of this event. Returns null if this event is not assigned a room or does not require a
      * room.
      */
-    RoomAssignment getRoom() {
-        return room;
+    public RoomAssignment getRoomAssignment() {
+        return roomAssignment;
     }
 
     /**
      * Sets the room of this event.
      *
-     * @param room The room to be assigned to this event.
+     * @param roomAssignment The room to be assigned to this event.
      * @throws IllegalArgumentException If the passed room is invalid for this event or this event's class does not need
      *                                  a room.
      *                                  <p>Running time = O(n), where n is the number of possible room assignments for
@@ -83,21 +83,21 @@ public class Event {
      *                                  the method. However, doing so will allow invalid (not included in the possible
      *                                  room assignments of this event's class) room assignments.</p>
      */
-    void setRoom(RoomAssignment room) throws IllegalArgumentException {
+    public void setRoomAssignment(RoomAssignment roomAssignment) throws IllegalArgumentException {
         //TODO OPTIMIZATION: For faster running time, comment the following if. However, doing so will allow invalid (not included in the possible room assignments of this event's class) room assignments.
-        if (!Arrays.asList(theClass.possibleRooms()).contains(room))
+        if (!Arrays.asList(theClass.possibleRooms()).contains(roomAssignment))
             throw new IllegalArgumentException("The passed room does not exist in the possible room assignments of this class!");
         // COMMENT UNTIL HERE!
-        this.room = room;
+        this.roomAssignment = roomAssignment;
     }
 
-    ArrayList<Student> getStudents() {
+    public ArrayList<Student> getStudents() {
         //TODO: Add students restrictions.
         return students;
     }
 
     @Override
     public String toString() {
-        return "Event{" + "theClass=" + theClass + ", time=" + time + ", room=" + room + ", students=" + students + '}';
+        return "Event{" + "theClass=" + theClass + ", timeAssignment=" + timeAssignment + ", roomAssignment=" + roomAssignment + ", students=" + students + '}';
     }
 }
