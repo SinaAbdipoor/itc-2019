@@ -30,4 +30,13 @@ public record Time(boolean[] weeks, boolean[] days, int start, int length) {
         if (start < 0 || length <= 0 || (start + length > 288))
             throw new IllegalArgumentException("This start (" + start + ") and/or length (" + length + ") " + "parameter(s) are illegal!");
     }
+
+    /**
+     * Gets the ending timeslot of this time based on the starting time slot and time length.
+     *
+     * @return Ending time slot.
+     */
+    public int getEnd() {
+        return start + length;
+    }
 }
