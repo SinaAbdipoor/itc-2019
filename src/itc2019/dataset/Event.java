@@ -48,10 +48,6 @@ public class Event {
      *
      * @param timeAssignment The time to be assigned to this event.
      * @throws IllegalArgumentException If the passed time is invalid for this event.
-     *                                  <p>Running time = O(n), where n is the number of possible time assignments for
-     *                                  this event's class. To reduce the running time to O(1), comment the first if in
-     *                                  the method. However, doing so will allow invalid (not included in the possible
-     *                                  time assignments of this event's class) time assignments.</p>
      */
     public void setTimeAssignment(TimeAssignment timeAssignment) throws IllegalArgumentException {
         //TODO OPTIMIZATION: For faster running time, comment the following if. However, doing so will allow invalid (not included in the possible time assignments of this event's class) time assignments.
@@ -78,10 +74,6 @@ public class Event {
      * @param roomAssignment The room to be assigned to this event.
      * @throws IllegalArgumentException If the passed room is invalid for this event or this event's class does not need
      *                                  a room.
-     *                                  <p>Running time = O(n), where n is the number of possible room assignments for
-     *                                  this event's class. To reduce the running time to O(1), comment the first if in
-     *                                  the method. However, doing so will allow invalid (not included in the possible
-     *                                  room assignments of this event's class) room assignments.</p>
      */
     public void setRoomAssignment(RoomAssignment roomAssignment) throws IllegalArgumentException {
         //TODO OPTIMIZATION: For faster running time, comment the following if. However, doing so will allow invalid (not included in the possible room assignments of this event's class) room assignments.
@@ -91,13 +83,45 @@ public class Event {
         this.roomAssignment = roomAssignment;
     }
 
-    public ArrayList<Student> getStudents() {
-        //TODO: Add students restrictions.
-        return students;
-    }
-
     @Override
     public String toString() {
         return "Event{" + "theClass=" + theClass + ", timeAssignment=" + timeAssignment + ", roomAssignment=" + roomAssignment + ", students=" + students + '}';
+    }
+
+    /**
+     * Adds (enrolls) the passed student to this event. <strong> This method does not check that the student has taken
+     * one class from each subpart of a single configuration. This should be checked when adding the students based on
+     * their requested courses.</strong>
+     *
+     * @param student   The student to be added to this event.
+     * @param timetable The timetable of this event to check if the passed student is enrolled in the corresponding
+     *                  event of the parent class of this event's class.
+     * @throws IllegalStateException    If the class is at max size or the student has not taken the parent class first.
+     * @throws IllegalArgumentException If the student did not request this class in the first place. <strong>To
+     *                                  significantly reduce the running time of this method from O(n^4) to O(n), this
+     *                                  checking has been commented in this method. MAKE SURE THE PASSED STUDENT HAS THE
+     *                                  CLASS OF THIS EVENT IN HIS/HER REQUESTED COURSES. OTHERWISE, UNCOMMENT THE THIRD
+     *                                  IF STATEMENT IN THIS METHOD</strong>
+     */
+    public void addStudent(Student student, Timetable timetable) throws IllegalStateException, IllegalArgumentException {
+        //TODO OPTIMIZATION: For faster running time, comment the following if statements. However, doing so will allow invalid student enrollments.
+        if (students.size() == theClass.limit())
+            throw new IllegalStateException("The corresponding class of this event has reached its limit size!");
+        if (theClass.parent() != null && !timetable.getEvent(theClass.parent().id()).hasStudent(student))
+            throw new IllegalStateException("The passed student needs to take the parent class first!");
+//        if (!student.needsClass(theClass))
+//            throw new IllegalArgumentException("The student did not request this class!");
+        // COMMENT UNTIL HERE!
+        students.add(student);
+    }
+
+    /**
+     * Checks if the passed student exists in this event.
+     *
+     * @param student The student whose presence in this event is to be checked.
+     * @return true if the passed student is already enrolled in this event; false otherwise.
+     */
+    public boolean hasStudent(Student student) {
+        return students.contains(student);
     }
 }
