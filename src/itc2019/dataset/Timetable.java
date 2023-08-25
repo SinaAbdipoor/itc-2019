@@ -16,43 +16,44 @@ public class Timetable {
     private final Event[] events;
 
     /**
-     * <p>Constructs an empty timetable including empty events for each of the classes defined in the dataset.</p>
-     * <p><strong>To populate the timetable with events, use the setEvent method.</strong></p>
+     * Constructs an empty timetable (a group of unscheduled events) based on the passed classes. <strong>Make sure the
+     * passed classes include ALL the classes defined in the problem statement as this timetable is constructed and
+     * initialized with events (based on passed classes) ONLY ONCE.</strong>
      *
-     * @param classNo Total number of classes in the problem instance.
+     * @param classes The list of ALL classes defined in the problem instance.
+     * @throws IllegalArgumentException  If there are multiple classes in the list of passed classes with the same id.
+     * @throws IndexOutOfBoundsException When the ids of the passed classes are not sequential.
      */
-    public Timetable(int classNo) {
-        events = new Event[classNo];
+    public Timetable(Class[] classes) throws IllegalArgumentException, IndexOutOfBoundsException {
+        events = new Event[classes.length];
+        for (Class aClass : classes) {
+            if (events[aClass.id() - 1] != null)
+                throw new IllegalArgumentException("Multiple classes with the same id has been found!");
+            events[aClass.id() - 1] = new Event(aClass);
+        }
     }
 
     /**
-     * Gets the event with the given class id.
+     * Gets the events of this timetable.
      *
-     * @param classId The class id of the event.
-     * @return The event corresponding with the given class id.
+     * @return The list of this timetable's events.
      */
-    public Event getEvent(int classId) {
-        return events[classId - 1];
-    }
-
-    /**
-     * Populates the timetable with the given event.
-     *
-     * @param event The event to be added to the timetable.
-     * @throws IllegalArgumentException If in the timetable there is already an event with the class id of the passed
-     *                                  event. <strong>In each run, you only need to set all the events (based on all
-     *                                  the classes in the problem instance) in the timetable ONCE. After they are all
-     *                                  initialized, using this set method, you only need to schedule them, and you do
-     *                                  not need to set them again.</strong>
-     */
-    public void setEvent(Event event) throws IllegalArgumentException {
-        if (events[event.getTheClass().id() - 1] != null)
-            throw new IllegalArgumentException("An event with this class id is already added!");
-        events[event.getTheClass().id() - 1] = event;
+    public Event[] getEvents() {
+        return events;
     }
 
     @Override
     public String toString() {
         return "Timetable{" + "events=" + Arrays.toString(events) + '}';
+    }
+
+    /**
+     * Gets the event with the given class id.
+     *
+     * @param classId The class id of the event's class.
+     * @return The event corresponding with the given class id.
+     */
+    public Event getEvent(int classId) {
+        return events[classId - 1];
     }
 }
