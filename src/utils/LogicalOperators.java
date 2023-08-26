@@ -44,4 +44,22 @@ public class LogicalOperators {
             result[i] = booleanArray1[i] || booleanArray2[i];
         return result;
     }
+
+    /**
+     * Checks if the two passed boolean arrays have no overlapping true values. Two boolean arrays have no overlapping
+     * true values if and only if for each index i, either booleanArray1[i] or booleanArray2[i] is true, but not both.
+     *
+     * @param booleanArray1 The first boolean array.
+     * @param booleanArray2 The second boolean array
+     * @return true if the two arrays have no overlapping true values; false otherwise.
+     * @throws IllegalArgumentException If booleanArray1 and booleanArray2 are of different lengths.
+     */
+    public static boolean areExclusive(boolean[] booleanArray1, boolean[] booleanArray2) throws IllegalArgumentException {
+        if (booleanArray1.length != booleanArray2.length)
+            throw new IllegalArgumentException("The two passed boolean arrays are of different lengths!");
+        // COMMENT UNTIL HERE!
+        for (int i = 0; i < booleanArray1.length; i++)
+            if (booleanArray1[i] && booleanArray2[i]) return false;
+        return true;
+    }
 }
