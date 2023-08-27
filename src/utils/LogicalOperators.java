@@ -55,6 +55,7 @@ public class LogicalOperators {
      * @throws IllegalArgumentException If booleanArray1 and booleanArray2 are of different lengths.
      */
     public static boolean areExclusive(boolean[] booleanArray1, boolean[] booleanArray2) throws IllegalArgumentException {
+        //TODO OPTIMIZATION: For faster running time, comment the following if. However, doing so will result in inaccurate operation of this method. Only do so if the two passed arrays have same lengths.
         if (booleanArray1.length != booleanArray2.length)
             throw new IllegalArgumentException("The two passed boolean arrays are of different lengths!");
         // COMMENT UNTIL HERE!
