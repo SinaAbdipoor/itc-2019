@@ -14,7 +14,7 @@ package itc2019.dataset;
  * <p><strong>IMPORTANT: For efficiency and optimization, travel times are implemented and stored in the Instance class
  * rather than here.</strong></p>
  */
-record Room(int id, int capacity, Time[] unavailable) {
+public record Room(int id, int capacity, Time[] unavailable) {
     /**
      * Constructs a Room object.
      *
@@ -23,7 +23,7 @@ record Room(int id, int capacity, Time[] unavailable) {
      * @param unavailable The unavailable time periods of the room.
      * @throws IllegalArgumentException If the passed id and capacity parameters are invalid.
      */
-    Room {
+    public Room {
         if (id < 1) throw new IllegalArgumentException("Room id cannot be less than 1!");
         if (capacity < 0) throw new IllegalArgumentException("Room capacity cannot be negative!");
     }
