@@ -9,5 +9,5 @@ package itc2019.dataset.constraints;
  *
  * @param constraint A hard distribution constraint
  */
-record HardConstraint(DistributionConstraint constraint) {
+public record HardConstraint(DistributionConstraint constraint) {
 }

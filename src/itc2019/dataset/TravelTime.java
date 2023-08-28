@@ -51,4 +51,13 @@ class TravelTime {
         travelTimes[room1.id() - 1][room2.id() - 1] = timeslots;
         travelTimes[room2.id() - 1][room1.id() - 1] = timeslots;
     }
+
+    /**
+     * Gets the number of rows of the travel time matrix.
+     *
+     * @return Travel time row count.
+     */
+    int getRowCount() {
+        return travelTimes.length;
+    }
 }

@@ -10,7 +10,7 @@ package itc2019.dataset.constraints;
  * separation between hard and soft constraints when instantiating in the {@link itc2019.dataset.ProblemInstance} for
  * further simplicity.</p>
  */
-record SoftConstraint(DistributionConstraint constraint, int penalty) {
+public record SoftConstraint(DistributionConstraint constraint, int penalty) {
     /**
      * Constructs a soft constraint object.
      *
@@ -18,7 +18,7 @@ record SoftConstraint(DistributionConstraint constraint, int penalty) {
      * @param penalty    The penalty for each violation of this soft constraint.
      * @throws IllegalArgumentException If the passed penalty is negative.
      */
-    SoftConstraint {
+    public SoftConstraint {
         if (penalty < 0) throw new IllegalArgumentException("Constraint penalty cannot be negative!");
     }
 
