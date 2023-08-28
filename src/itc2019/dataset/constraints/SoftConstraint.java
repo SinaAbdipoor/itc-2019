@@ -7,8 +7,8 @@ package itc2019.dataset.constraints;
  * violation. In other words, if M pairs of classes do not satisfy the distribution constraint, the total penalty for
  * violation of this constraint is M × penalty.</p>
  * <p>This class is basically the same as the {@link DistributionConstraint}. It only acts as a wrapper to create
- * separation between hard and soft constraints when instantiating in the main class {@link ProblemInstance} for further
- * simplicity.</p>
+ * separation between hard and soft constraints when instantiating in the {@link itc2019.dataset.ProblemInstance} for
+ * further simplicity.</p>
  */
 record SoftConstraint(DistributionConstraint constraint, int penalty) {
     /**
