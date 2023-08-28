@@ -1,5 +1,8 @@
 package itc2019.dataset;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * <p>This class represents classes as defined in the ITC 2019. Each student must attend one class from each subpart of
  * a single configuration. All students in the course configuration must be sectioned into classes of each subpart such
@@ -19,17 +22,21 @@ package itc2019.dataset;
  */
 public record Class(int id, int limit, TimeAssignment[] possibleTimes, RoomAssignment[] possibleRooms, Class parent) {
     /**
-     * Constructs a Class object.
+     * Constructs a Class object and sorts the possible time and room assignments based on their respective penalties.
      *
      * @param id            The id of this class.
      * @param limit         The limit (capacity) of this class.
      * @param possibleTimes The possible time periods for this class.
-     * @param possibleRooms The possible room assignments for this class. <strong>If this class does not require a room, pass null.</strong>
-     * @param parent        The parent class of this class. <strong>If this class is not in a parent-child relationship, pass null.</strong>
+     * @param possibleRooms The possible room assignments for this class. <strong>If this class does not require a room,
+     *                      pass null.</strong>
+     * @param parent        The parent class of this class. <strong>If this class is not in a parent-child relationship,
+     *                      pass null.</strong>
      * @throws IllegalArgumentException If the passed id or limit parameters are invalid.
      */
     public Class {
         if (id < 1) throw new IllegalArgumentException("Class id cannot be less than 1!");
         if (limit < 0) throw new IllegalArgumentException("Class limit cannot be negative!");
+        Arrays.sort(possibleTimes, Comparator.comparingInt(TimeAssignment::penalty));
+        if (possibleRooms != null) Arrays.sort(possibleRooms, Comparator.comparingInt(RoomAssignment::penalty));
     }
 }
