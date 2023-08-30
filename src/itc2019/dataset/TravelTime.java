@@ -60,7 +60,7 @@ public class TravelTime {
      * @return The number of timeslots needed to go from room 1 to room 2.
      * @throws IndexOutOfBoundsException If room indices are out of bounds.
      */
-    int getTravelTime(Room room1, Room room2) throws IndexOutOfBoundsException {
+    public int getTravelTime(Room room1, Room room2) throws IndexOutOfBoundsException {
         return travelTimes[room1.id() - 1][room2.id() - 1];
     }
 
