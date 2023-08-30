@@ -19,7 +19,7 @@ import utils.LogicalOperators;
  */
 class SameAttendees extends PairDistributionConstraint {
     /**
-     * Constructs a same attendees distribution constraint object with the given classes.
+     * Constructs a paired same attendees distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
