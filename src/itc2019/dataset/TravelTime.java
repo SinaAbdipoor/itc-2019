@@ -3,20 +3,48 @@ package itc2019.dataset;
 import java.util.Arrays;
 
 /**
- * This class represents the travel time between the rooms of the ITC 2019 dataset, which expresses the number of
- * timeslots needed to get from one room to other rooms.
+ * This singleton class represents the travel time between the rooms of the ITC 2019 dataset, which expresses the number
+ * of timeslots needed to get from one room to other rooms.
  */
-class TravelTime {
+public class TravelTime {
+    private static TravelTime travelTimeInstance = null;
     private final int[][] travelTimes;
 
     /**
-     * Constructs a travel time object and initializes the travel times for rooms with 0.
+     * Private constructor to initialize the travel times matrix with 0.
      *
-     * @param roomCount The number of all rooms in the problem instance.
+     * @param roomCount The total number of rooms in the problem instance.
      * @throws NegativeArraySizeException If the provided room count is negative.
      */
-    TravelTime(int roomCount) throws NegativeArraySizeException {
+    private TravelTime(int roomCount) throws NegativeArraySizeException {
         travelTimes = new int[roomCount][roomCount];
+    }
+
+    /**
+     * Initializes (creates an instance for) the static constructor of this travel time singleton class. This method has
+     * to be performed first (only once) to have the object of this class.
+     *
+     * @param roomNo The total number of rooms in the problem instance.
+     * @return The object or instance of this singleton class.
+     * @throws ExceptionInInitializerError If an object of this singleton class has already been created.
+     */
+    public static synchronized TravelTime createInstance(int roomNo) throws ExceptionInInitializerError {
+        if (travelTimeInstance != null)
+            throw new ExceptionInInitializerError("An object of this singleton class has already been created!");
+        travelTimeInstance = new TravelTime(roomNo);
+        return travelTimeInstance;
+    }
+
+    /**
+     * Returns the singleton instance of travel time.
+     *
+     * @return The travel time instance
+     * @throws NullPointerException If this singleton class has not yet been initialized or created.
+     */
+    public static synchronized TravelTime getInstance() throws NullPointerException {
+        if (travelTimeInstance == null)
+            throw new NullPointerException("An object of this singleton class must be created first (using the createInstance method)!");
+        return travelTimeInstance;
     }
 
     @Override
