@@ -12,7 +12,7 @@ import utils.LogicalOperators;
  */
 class DifferentWeeks extends PairDistributionConstraint {
     /**
-     * Constructs a different weeks distribution constraint object with the given classes.
+     * Constructs a paired different weeks distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */

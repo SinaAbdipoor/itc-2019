@@ -12,7 +12,7 @@ import utils.LogicalOperators;
  */
 class DifferentDays extends PairDistributionConstraint {
     /**
-     * Constructs a different days distribution constraint object with the given classes.
+     * Constructs a paired different days distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */

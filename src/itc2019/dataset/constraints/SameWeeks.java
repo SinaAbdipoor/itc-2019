@@ -14,7 +14,7 @@ import utils.LogicalOperators;
  */
 class SameWeeks extends PairDistributionConstraint {
     /**
-     * Constructs a same weeks distribution constraint object with the given classes.
+     * Constructs a paired same weeks distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */

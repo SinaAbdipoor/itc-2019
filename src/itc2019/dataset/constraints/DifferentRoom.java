@@ -10,7 +10,7 @@ import itc2019.dataset.Event;
  */
 class DifferentRoom extends PairDistributionConstraint {
     /**
-     * Constructs a different room distribution constraint object with the given classes.
+     * Constructs a paired different room distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */

@@ -13,7 +13,7 @@ import utils.LogicalOperators;
  */
 class Overlap extends PairDistributionConstraint {
     /**
-     * Constructs an overlap distribution constraint object with the given classes.
+     * Constructs a paired overlap distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */

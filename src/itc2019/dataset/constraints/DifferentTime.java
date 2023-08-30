@@ -11,7 +11,7 @@ import itc2019.dataset.Event;
  */
 class DifferentTime extends PairDistributionConstraint {
     /**
-     * Constructs a different time distribution constraint object with the given classes.
+     * Constructs a paired different time distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
