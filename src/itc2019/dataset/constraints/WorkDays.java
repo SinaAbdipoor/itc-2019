@@ -14,7 +14,7 @@ import utils.LogicalOperators;
  * for any two classes Ci and Cj from the constraint.</p>
  */
 class WorkDays extends PairDistributionConstraint {
-    private final int maxDayLength;
+    private final int maxDayLength; //S
 
     /**
      * Constructs a paired work days distribution constraint object with the given classes.
