@@ -22,7 +22,7 @@ class DifferentTime extends PairDistributionConstraint {
     @Override
     boolean check(Event e1, Event e2) throws NullPointerException {
         // (Ci.end ≤ Cj.start) ∨ (Cj.end ≤ Ci.start)
-        return (e1.getTimeAssignment().time().getEnd() <= e2.getTimeAssignment().time().start())
-                || (e2.getTimeAssignment().time().getEnd() <= e1.getTimeAssignment().time().start());
+        return (e1.getTimeAssignment().time().end() <= e2.getTimeAssignment().time().start())
+                || (e2.getTimeAssignment().time().end() <= e1.getTimeAssignment().time().start());
     }
 }

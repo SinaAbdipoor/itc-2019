@@ -24,8 +24,8 @@ class NotOverlap extends PairDistributionConstraint {
     @Override
     boolean check(Event e1, Event e2) throws NullPointerException {
         // (Ci.end ≤ Cj.start) ∨ (Cj.end ≤ Ci.start) ∨ ((Ci.days and Cj.days) = 0) ∨ ((Ci.weeks and Cj.weeks) = 0)
-        return (e1.getTimeAssignment().time().getEnd() <= e2.getTimeAssignment().time().start())
-                || (e2.getTimeAssignment().time().getEnd() <= e1.getTimeAssignment().time().start())
+        return (e1.getTimeAssignment().time().end() <= e2.getTimeAssignment().time().start())
+                || (e2.getTimeAssignment().time().end() <= e1.getTimeAssignment().time().start())
                 || (LogicalOperators.areExclusive(e1.getTimeAssignment().time().days(), e2.getTimeAssignment().time().days()))
                 || (LogicalOperators.areExclusive(e1.getTimeAssignment().time().weeks(), e2.getTimeAssignment().time().weeks()));
     }

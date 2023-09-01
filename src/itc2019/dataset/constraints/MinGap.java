@@ -35,7 +35,7 @@ class MinGap extends PairDistributionConstraint {
         // ((Ci.days and Cj.days) = 0) ∨ ((Ci.weeks and Cj.weeks) = 0) ∨ (Ci.end + G ≤ Cj.start) ∨ (Cj.end + G ≤ Ci.start)
         return LogicalOperators.areExclusive(e1.getTimeAssignment().time().days(), e2.getTimeAssignment().time().days())
                 || LogicalOperators.areExclusive(e1.getTimeAssignment().time().weeks(), e2.getTimeAssignment().time().weeks())
-                || (e1.getTimeAssignment().time().getEnd() + minGap <= e2.getTimeAssignment().time().start())
-                || (e2.getTimeAssignment().time().getEnd() + minGap <= e1.getTimeAssignment().time().start());
+                || (e1.getTimeAssignment().time().end() + minGap <= e2.getTimeAssignment().time().start())
+                || (e2.getTimeAssignment().time().end() + minGap <= e1.getTimeAssignment().time().start());
     }
 }

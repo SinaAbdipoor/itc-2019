@@ -33,8 +33,8 @@ class SameAttendees extends PairDistributionConstraint {
         // ∨ (Cj.end + Cj.room.travel[Ci.room] ≤ Ci.start)
         // ∨ ((Ci.days and Cj.days) = 0) ∨ ((Ci.weeks and Cj.weeks) = 0)
         int travelTime = TravelTime.getInstance().getTravelTime(e1.getRoomAssignment().room(), e2.getRoomAssignment().room());
-        return (e1.getTimeAssignment().time().getEnd() + travelTime <= e2.getTimeAssignment().time().start())
-                || (e2.getTimeAssignment().time().getEnd() + travelTime <= e1.getTimeAssignment().time().start())
+        return (e1.getTimeAssignment().time().end() + travelTime <= e2.getTimeAssignment().time().start())
+                || (e2.getTimeAssignment().time().end() + travelTime <= e1.getTimeAssignment().time().start())
                 || LogicalOperators.areExclusive(e1.getTimeAssignment().time().days(), e2.getTimeAssignment().time().days())
                 || LogicalOperators.areExclusive(e1.getTimeAssignment().time().weeks(), e2.getTimeAssignment().time().weeks());
     }

@@ -35,6 +35,6 @@ class WorkDays extends PairDistributionConstraint {
         // ((Ci.days and Cj.days) = 0) ∨ ((Ci.weeks and Cj.weeks) = 0) ∨ (max(Ci.end,Cj.end)−min(Ci.start,Cj.start) ≤ S)
         return LogicalOperators.areExclusive(e1.getTimeAssignment().time().days(), e2.getTimeAssignment().time().days())
                 || LogicalOperators.areExclusive(e1.getTimeAssignment().time().weeks(), e2.getTimeAssignment().time().weeks())
-                || (Math.max(e1.getTimeAssignment().time().getEnd(), e2.getTimeAssignment().time().getEnd()) - Math.min(e1.getTimeAssignment().time().start(), e2.getTimeAssignment().time().start()) <= maxDayLength);
+                || (Math.max(e1.getTimeAssignment().time().end(), e2.getTimeAssignment().time().end()) - Math.min(e1.getTimeAssignment().time().start(), e2.getTimeAssignment().time().start()) <= maxDayLength);
     }
 }

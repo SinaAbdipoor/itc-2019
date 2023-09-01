@@ -26,9 +26,8 @@ class SameTime extends PairDistributionConstraint {
 
     @Override
     boolean check(Event e1, Event e2) throws NullPointerException {
-        int e1End = e1.getTimeAssignment().time().getEnd(), e2End = e2.getTimeAssignment().time().getEnd();
         // (Ci.start ≤ Cj.start ∧ Cj.end ≤ Ci.end) ∨ (Cj.start ≤ Ci.start ∧ Ci.end ≤ Cj.end)
-        return (e1.getTimeAssignment().time().start() <= e2.getTimeAssignment().time().start() && e2End <= e1End)
-                || (e2.getTimeAssignment().time().start() <= e1.getTimeAssignment().time().start() && e1End <= e2End);
+        return (e1.getTimeAssignment().time().start() <= e2.getTimeAssignment().time().start() && e2.getTimeAssignment().time().end() <= e1.getTimeAssignment().time().end())
+                || (e2.getTimeAssignment().time().start() <= e1.getTimeAssignment().time().start() && e1.getTimeAssignment().time().end() <= e2.getTimeAssignment().time().end());
     }
 }

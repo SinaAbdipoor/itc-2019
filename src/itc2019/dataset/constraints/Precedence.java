@@ -48,6 +48,6 @@ class Precedence extends PairDistributionConstraint {
         return e1WeeksFirst < e2WeeksFirst
                 || (e1WeeksFirst == e2WeeksFirst
                 && (e1DaysFirst < e2DaysFirst
-                || (e1DaysFirst == e2DaysFirst && e1.getTimeAssignment().time().getEnd() <= e2.getTimeAssignment().time().start())));
+                || (e1DaysFirst == e2DaysFirst && e1.getTimeAssignment().time().end() <= e2.getTimeAssignment().time().start())));
     }
 }
