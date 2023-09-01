@@ -3,7 +3,7 @@
 ## Introduction
 
 This project addresses the International Timetabling Competition (ITC) 2019 benchmark dataset, which is the current
-latest benchmark datatset on the University Course Timetabling Problem (UCTP). It consists of a set of challenging
+latest benchmark dataset on the University Course Timetabling Problem (UCTP). It consists of a set of challenging
 real-world timetabling problems from different countries. The ITC 2019 aims to stimulate research on automated
 timetabling and to provide a common platform for comparing different approaches. Further information about this
 benchmark dataset can be found on the [ITC 2019 Website](https://www.itc2019.org/).
