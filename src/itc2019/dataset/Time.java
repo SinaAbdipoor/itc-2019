@@ -37,6 +37,7 @@ public record Time(boolean[] weeks, boolean[] days, int start, int length) {
      * @return Ending time slot.
      */
     public int getEnd() {
+        //TODO: Can this be optimized for constraints while keeping Time a Record?
         return start + length;
     }
 }
