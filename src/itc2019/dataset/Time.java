@@ -15,29 +15,26 @@ package itc2019.dataset;
  * specifies that the class would only meet during even weeks of the semester (during the 2nd, 4th, . . . , and 12th
  * weeks of the semester).</p>
  */
-public record Time(boolean[] weeks, boolean[] days, int start, int length) {
+public record Time(boolean[] weeks, boolean[] days, int start, int duration, int end) {
     /**
-     * Constructs a Time object.
+     * Constructs a Time object. <strong>To ensure the weeks and days arrays are valid, make sure you pass the nrWeeks
+     * and nrDays parameters when creating instances.</strong>
      *
-     * @param weeks  The semester weeks when the class takes place.
-     * @param days   The days of the week when the class takes place.
-     * @param start  The starting time slot of the class (each time slot is 5 mins and there are 288 time slots in a day).
-     * @param length The duration of the class in time slots (each time slot is 5 mins and there are 288 time slots in a day).
-     * @throws IllegalArgumentException If the input days, start, or length parameters are invalid.
+     * @param nrWeeks  The number of weeks in a semester as defined in the problem instance.
+     * @param nrDays   The number of days in a week as defined in the problem instance.
+     * @param weeks    The weeks that this time period takes place.
+     * @param days     The days that this time period takes place.
+     * @param start    The starting time slot of this time period.
+     * @param duration The duration of this time period.
+     * @throws IllegalArgumentException If the passed parameters are invalid.
      */
-    public Time {
-        if (days.length > 7) throw new IllegalArgumentException("There cannot be more than 7 days in a week!");
-        if (start < 0 || length <= 0 || (start + length > 288))
-            throw new IllegalArgumentException("This start (" + start + ") and/or length (" + length + ") " + "parameter(s) are illegal!");
-    }
-
-    /**
-     * Gets the ending timeslot of this time based on the starting time slot and time length.
-     *
-     * @return Ending time slot.
-     */
-    public int getEnd() {
-        //TODO: Can this be optimized for constraints while keeping Time a Record?
-        return start + length;
+    public Time(int nrWeeks, int nrDays, boolean[] weeks, boolean[] days, int start, int duration) throws IllegalArgumentException {
+        this(weeks, days, start, duration, start + duration);
+        if (weeks.length != nrWeeks)
+            throw new IllegalArgumentException("The passed weeks array is not of the same as the number of weeks in a semester defined in the problem instance!");
+        if (days.length != nrDays)
+            throw new IllegalArgumentException("The passed days array is not of the same as the number of days in a week defined in the problem instance");
+        if (start < 0 || duration <= 0 || (start + duration > 288))
+            throw new IllegalArgumentException("This start and/or length parameter(s) are illegal!");
     }
 }
