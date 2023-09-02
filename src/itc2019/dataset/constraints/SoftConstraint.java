@@ -1,5 +1,7 @@
 package itc2019.dataset.constraints;
 
+import itc2019.dataset.Timetable;
+
 /**
  * <p>This class represents a distribution constraint that is hard (required="true"). Soft constraints may not be
  * satisfied and there is a penalty for each violation. When any of the constraints that can be validated on pairs of
@@ -23,17 +25,14 @@ public record SoftConstraint(DistributionConstraint constraint, int penalty) {
     }
 
     /**
-     * Calculates the penalty based on the given violation count.
+     * Checks the violation count of the constraint based on the passed timetable and calculates the penalty of this
+     * soft constraint.
      *
-     * @param violationCount The number of constraint violations.
-     * @return The calculated penalty, which is the product of penalty and violation count.
-     * @throws IllegalArgumentException If the violationCount is negative.
+     * @param timetable The timetable (candidate solution) to calculate the penalty of this soft constraint for.
+     * @return The penalty of this soft constraint on the given timetable.
+     * @throws NullPointerException If the passed timetable is half or not scheduled.
      */
-    int calcPenalty(int violationCount) throws IllegalArgumentException {
-        //TODO OPTIMIZATION: For faster running time, comment the following if statements. However, doing so will allow for negative penalty. Only do so when you are sure the passed violationCount is not negative.
-//        if (violationCount < 0)
-//            throw new IllegalArgumentException("The number of constraint violations cannot be negative!");
-        // COMMENT UNTIL HERE!
-        return penalty * violationCount;
+    int calcPenalty(Timetable timetable) throws NullPointerException {
+        return penalty * constraint.violationCount(timetable);
     }
 }
