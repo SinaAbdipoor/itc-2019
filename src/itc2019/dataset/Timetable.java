@@ -54,7 +54,6 @@ public class Timetable {
      * @return The event of the passed class.
      */
     public Event getEvent(Class aClass) {
-        // TODO: Should class id be the parameter instead?
         return events[aClass.id() - 1];
     }
 }
