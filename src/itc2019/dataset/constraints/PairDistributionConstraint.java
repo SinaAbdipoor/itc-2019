@@ -34,9 +34,9 @@ abstract class PairDistributionConstraint extends DistributionConstraint {
     boolean isSatisfied(Timetable timetable) throws NullPointerException {
         Event event1, event2;
         for (int i = 0; i < getClasses().length - 1; i++) {
-            event1 = timetable.getEvent(getClasses()[i].id());
+            event1 = timetable.getEvent(getClasses()[i]);
             for (int j = i + 1; j < getClasses().length; j++) {
-                event2 = timetable.getEvent(getClasses()[j].id());
+                event2 = timetable.getEvent(getClasses()[j]);
                 if (!check(event1, event2)) return false;
             }
         }
@@ -48,9 +48,9 @@ abstract class PairDistributionConstraint extends DistributionConstraint {
         int count = 0;
         Event event1, event2;
         for (int i = 0; i < getClasses().length - 1; i++) {
-            event1 = timetable.getEvent(getClasses()[i].id());
+            event1 = timetable.getEvent(getClasses()[i]);
             for (int j = i + 1; j < getClasses().length; j++) {
-                event2 = timetable.getEvent(getClasses()[j].id());
+                event2 = timetable.getEvent(getClasses()[j]);
                 if (!check(event1, event2)) count++;
             }
         }

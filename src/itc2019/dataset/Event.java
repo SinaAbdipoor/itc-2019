@@ -107,7 +107,7 @@ public class Event {
         //TODO OPTIMIZATION: For faster running time, comment the following if statements. However, doing so will allow invalid student enrollments.
         if (students.size() == theClass.limit())
             throw new IllegalStateException("The corresponding class of this event has reached its limit size!");
-        if (theClass.parent() != null && !timetable.getEvent(theClass.parent().id()).hasStudent(student))
+        if (theClass.parent() != null && !timetable.getEvent(theClass.parent()).hasStudent(student))
             throw new IllegalStateException("The passed student needs to take the parent class first!");
 //        if (!student.needsClass(theClass))
 //            throw new IllegalArgumentException("The student did not request this class!");

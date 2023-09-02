@@ -48,12 +48,13 @@ public class Timetable {
     }
 
     /**
-     * Gets the event with the given class id.
+     * Gets the corresponding event of the passed class.
      *
-     * @param classId The class id of the event's class.
-     * @return The event corresponding with the given class id.
+     * @param aClass The class to find the corresponding event of.
+     * @return The event of the passed class.
      */
-    public Event getEvent(int classId) {
-        return events[classId - 1];
+    public Event getEvent(Class aClass) {
+        // TODO: Should class id be the parameter instead?
+        return events[aClass.id() - 1];
     }
 }
