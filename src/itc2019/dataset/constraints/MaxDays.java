@@ -33,8 +33,8 @@ class MaxDays extends DistributionConstraint {
     @Override
     boolean isSatisfied(Timetable timetable) throws NullPointerException {
         // countNonzeroBits(C1.days or C2.days or ⋅ ⋅ ⋅ Cn.days) ≤ D
-        int trueCounter = 0;
-        for (int i = 0; i < timetable.getEvents()[0].getTimeAssignment().time().days().length; i++)
+        int trueCounter = 0, daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;
+        for (int i = 0; i < daysLength; i++)
             for (Class aClass : getClasses()) {
                 if (trueCounter > maxDays) return false;
                 if (timetable.getEvent(aClass).getTimeAssignment().time().days()[i]) {
@@ -47,8 +47,8 @@ class MaxDays extends DistributionConstraint {
 
     @Override
     int violationCount(Timetable timetable) throws NullPointerException {
-        int trueCounter = 0;
-        for (int i = 0; i < timetable.getEvents()[0].getTimeAssignment().time().days().length; i++)
+        int trueCounter = 0, daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;
+        for (int i = 0; i < daysLength; i++)
             for (Class aClass : getClasses())
                 if (timetable.getEvent(aClass).getTimeAssignment().time().days()[i]) {
                     trueCounter++;
