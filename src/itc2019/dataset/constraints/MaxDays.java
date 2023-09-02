@@ -36,8 +36,11 @@ class MaxDays extends DistributionConstraint {
         int trueCounter = 0;
         for (int i = 0; i < timetable.getEvents()[0].getTimeAssignment().time().days().length; i++)
             for (Class aClass : getClasses()) {
-                if (timetable.getEvent(aClass).getTimeAssignment().time().days()[i]) trueCounter++;
                 if (trueCounter > maxDays) return false;
+                if (timetable.getEvent(aClass).getTimeAssignment().time().days()[i]) {
+                    trueCounter++;
+                    break;
+                }
             }
         return true;
     }
@@ -47,7 +50,10 @@ class MaxDays extends DistributionConstraint {
         int trueCounter = 0;
         for (int i = 0; i < timetable.getEvents()[0].getTimeAssignment().time().days().length; i++)
             for (Class aClass : getClasses())
-                if (timetable.getEvent(aClass).getTimeAssignment().time().days()[i]) trueCounter++;
+                if (timetable.getEvent(aClass).getTimeAssignment().time().days()[i]) {
+                    trueCounter++;
+                    break;
+                }
         return Math.max(0, trueCounter - maxDays);
     }
 }
