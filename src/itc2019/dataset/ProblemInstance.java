@@ -31,11 +31,11 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
      **/
     public ProblemInstance {
         // TODO: Do I need to add a check for ids being sequential and unique?
-        if (nrDays < 0 || nrDays > 7)
-            throw new IllegalArgumentException("The number of days in a week should be between 0 and 7!");
-        if (nrWeeks < 0) throw new IllegalArgumentException("The number of weeks in a semester cannot be negative!");
-        if (slotsPerDay < 0 || slotsPerDay > 288)
-            throw new IllegalArgumentException("The number of slots (each slot is 5 mins) per day should be between 0 and 288!");
+        if (nrDays < 1 || nrDays > 7)
+            throw new IllegalArgumentException("The number of days in a week should be between 1 and 7!");
+        if (nrWeeks < 1) throw new IllegalArgumentException("The number of weeks in a semester cannot be less than 1!");
+        if (slotsPerDay < 1 || slotsPerDay > 288)
+            throw new IllegalArgumentException("The number of slots (each slot is 5 mins) per day should be between 1 and 288!");
         if (timePenaltyWeight < 1) throw new IllegalArgumentException("The time penalty weight should be above 0!");
         if (roomPenaltyWeight < 1) throw new IllegalArgumentException("The room penalty weight should be above 0!");
         if (distributionPenaltyWeight < 1)
