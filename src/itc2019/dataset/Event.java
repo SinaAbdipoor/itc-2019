@@ -76,7 +76,10 @@ public class Event {
      *                                  a room.
      */
     public void setRoomAssignment(RoomAssignment roomAssignment) throws IllegalArgumentException {
-        //TODO OPTIMIZATION: For faster running time, comment the following if. However, doing so will allow invalid (not included in the possible room assignments of this event's class) room assignments.
+        //TODO OPTIMIZATION: For faster running time, comment the following if statements. However, doing so will allow invalid (not included in the possible room assignments of this event's class) room assignments.
+        if (theClass.possibleRooms() == null) throw new IllegalArgumentException("This event does not require a room!");
+        if (students.size() > roomAssignment.room().capacity())
+            throw new IllegalArgumentException("The passed room does not have enough capacity for the current participant size of this event!");
         if (!Arrays.asList(theClass.possibleRooms()).contains(roomAssignment))
             throw new IllegalArgumentException("The passed room does not exist in the possible room assignments of this class!");
         // COMMENT UNTIL HERE!
@@ -96,32 +99,27 @@ public class Event {
      * @param student   The student to be added to this event.
      * @param timetable The timetable of this event to check if the passed student is enrolled in the corresponding
      *                  event of the parent class of this event's class.
-     * @throws IllegalStateException    If the class is at max size or the student has not taken the parent class first.
-     * @throws IllegalArgumentException If the student did not request this class in the first place. <strong>To
-     *                                  significantly reduce the running time of this method from O(n^4) to O(n), this
-     *                                  checking has been commented in this method. MAKE SURE THE PASSED STUDENT HAS THE
-     *                                  CLASS OF THIS EVENT IN HIS/HER REQUESTED COURSES. OTHERWISE, UNCOMMENT THE THIRD
-     *                                  IF STATEMENT IN THIS METHOD</strong>
+     * @throws IllegalStateException    If the class or the current room of this event is at max size.
+     * @throws IllegalArgumentException If the student is already enrolled in this event, did not request this class in
+     *                                  the first place, or has not taken the parent class first. <strong>To
+     *                                  significantly reduce the running time of this method from O(n^4) to O(n), the
+     *                                  student needing this event check has been commented in this method. MAKE SURE
+     *                                  THE PASSED STUDENT HAS THE CLASS OF THIS EVENT IN HIS/HER REQUESTED COURSES.
+     *                                  OTHERWISE, UNCOMMENT THE RESPONSIBLE IF STATEMENT IN THIS METHOD</strong>
      */
     public void addStudent(Student student, Timetable timetable) throws IllegalStateException, IllegalArgumentException {
         //TODO OPTIMIZATION: For faster running time, comment the following if statements. However, doing so will allow invalid student enrollments.
+        if (students.contains(student))
+            throw new IllegalArgumentException("The passed student is already in this event!");
         if (students.size() == theClass.limit())
             throw new IllegalStateException("The corresponding class of this event has reached its limit size!");
-        if (theClass.parent() != null && !timetable.getEvent(theClass.parent()).hasStudent(student))
-            throw new IllegalStateException("The passed student needs to take the parent class first!");
+        if (roomAssignment != null && students.size() == roomAssignment.room().capacity())
+            throw new IllegalStateException("The current assigned room to this event has reached its maximum capacity!");
+        if (theClass.parent() != null && !timetable.getEvent(theClass.parent()).students.contains(student))
+            throw new IllegalArgumentException("The passed student needs to take the parent class first!");
 //        if (!student.needsClass(theClass))
 //            throw new IllegalArgumentException("The student did not request this class!");
         // COMMENT UNTIL HERE!
         students.add(student);
-    }
-
-    /**
-     * Checks if the passed student exists in this event.
-     *
-     * @param student The student whose presence in this event is to be checked.
-     * @return true if the passed student is already enrolled in this event; false otherwise.
-     */
-    public boolean hasStudent(Student student) {
-        return students.contains(student);
     }
 }
