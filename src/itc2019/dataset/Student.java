@@ -32,7 +32,7 @@ record Student(int id, Course[] courses) {
      * Instead, while assigning a student to a class, search the demanded courses of the student.</strong></p>
      *
      * @param aClass The class to search for.
-     * @return True if the passed class is in the demanded courses of this student; False otherwise.
+     * @return true if the passed class is in the demanded courses of this student; false otherwise.
      */
     boolean needsClass(Class aClass) {
         for (Course course : courses)
