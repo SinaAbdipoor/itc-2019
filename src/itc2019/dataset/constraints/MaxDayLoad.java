@@ -35,7 +35,6 @@ class MaxDayLoad extends DistributionConstraint {
         this.maxDayLoad = maxDayLoad;
     }
 
-    // TODO: Is there a better way to get the days and weeks length for both methods below?
     @Override
     boolean isSatisfied(Timetable timetable) throws NullPointerException {
         int dayLoad, weeksLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().weeks().length, daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;

@@ -29,7 +29,7 @@ class MaxDays extends DistributionConstraint {
         this.maxDays = maxDays;
     }
 
-    // TODO: Is there a better way to get the days length for both methods below?
+    // TODO: Is there a better way to get the days and weeks lengths in isSatisfied and violationCount methods for this, maxDayLoad, maxBreaks, and maxBlock constraint classes?
     @Override
     boolean isSatisfied(Timetable timetable) throws NullPointerException {
         // countNonzeroBits(C1.days or C2.days or ⋅ ⋅ ⋅ Cn.days) ≤ D
