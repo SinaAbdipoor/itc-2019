@@ -5,7 +5,6 @@ import itc2019.dataset.Time;
 import itc2019.dataset.Timetable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 /**
