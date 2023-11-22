@@ -29,7 +29,7 @@ import java.util.Comparator;
 class MaxBreaks extends DistributionConstraint {
     private final int maxBreakCount, extendedBreakLength; // R & S
 
-    record Block(int start, int end) {
+    private record Block(int start, int end) {
     }
 
     /**
