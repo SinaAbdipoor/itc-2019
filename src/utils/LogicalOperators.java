@@ -77,5 +77,4 @@ public class LogicalOperators {
             if (booleanArray[i]) return i;
         throw new NoSuchElementException("The passed boolean array does not contain a true value!");
     }
-
 }

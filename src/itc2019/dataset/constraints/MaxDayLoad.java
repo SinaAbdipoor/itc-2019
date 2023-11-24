@@ -55,7 +55,7 @@ class MaxDayLoad extends DistributionConstraint {
 
     @Override
     int violationCount(Timetable timetable) throws NullPointerException {
-        int dayLoad, totalExceeds = 0;
+        int dayLoad, totalOverflow = 0;
         final int weeksLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().weeks().length, daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;
         Time eventTime;
         for (int w = 0; w < weeksLength; w++)
@@ -64,9 +64,9 @@ class MaxDayLoad extends DistributionConstraint {
                 for (Class aClass : getClasses()) {
                     eventTime = timetable.getEvent(aClass).getTimeAssignment().time();
                     if (eventTime.weeks()[w] && eventTime.days()[d]) dayLoad += eventTime.duration();
-                    if (dayLoad > maxDayLoad) totalExceeds += (dayLoad - maxDayLoad);
+                    if (dayLoad > maxDayLoad) totalOverflow += (dayLoad - maxDayLoad);
                 }
             }
-        return totalExceeds;
+        return totalOverflow;
     }
 }
