@@ -28,7 +28,7 @@ public class Timetable {
         events = new Event[classes.length];
         for (Class aClass : classes) {
             if (events[aClass.id() - 1] != null)
-                throw new IllegalArgumentException("Multiple classes with the same id has been found!");
+                throw new IllegalArgumentException("Multiple classes with the same id have been found!");
             events[aClass.id() - 1] = new Event(aClass);
         }
     }

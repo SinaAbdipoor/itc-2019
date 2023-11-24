@@ -12,6 +12,6 @@ record Subpart(int id, Class[] classes) {
      * @throws IllegalArgumentException If the passed id is invalid.
      */
     Subpart {
-        if (id < 1) throw new IllegalArgumentException("Room id cannot be less than 1!");
+        if (id < 1) throw new IllegalArgumentException("Subpart id cannot be less than 1!");
     }
 }
