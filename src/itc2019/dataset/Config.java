@@ -4,7 +4,7 @@ package itc2019.dataset;
  * This class represents Configurations as defined in the ITC 2019. Each configuration consists of one or more
  * subparts with their unique ids
  */
-record Config(int id, Subpart[] subparts) {
+public record Config(int id, Subpart[] subparts) {
     /**
      * Constructs a Config object.
      *
@@ -12,7 +12,7 @@ record Config(int id, Subpart[] subparts) {
      * @param subparts The list of subparts of this config.
      * @throws IllegalArgumentException If the config id is invalid.
      */
-    Config {
+    public Config {
         if (id < 1) throw new IllegalArgumentException("Config id cannot be less than 1!");
     }
 }
