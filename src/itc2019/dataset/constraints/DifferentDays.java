@@ -10,13 +10,13 @@ import utils.LogicalOperators;
  * means that (Ci.days and Cj.days) = 0 for any two classes Ci and Cj from the constraint; doing binary "and" between
  * the bit strings representing the assigned days.</p>
  */
-class DifferentDays extends PairDistributionConstraint {
+public class DifferentDays extends PairDistributionConstraint {
     /**
      * Constructs a paired different days distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    DifferentDays(Class[] classes) {
+    public DifferentDays(Class[] classes) {
         super(classes);
     }
 

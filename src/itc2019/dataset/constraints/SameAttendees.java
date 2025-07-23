@@ -17,13 +17,13 @@ import utils.LogicalOperators;
  * for any two classes Ci and Cj from the constraint; Ci.room.travel[Cj.room] is the travel time between the assigned
  * rooms of Ci and Cj.</p>
  */
-class SameAttendees extends PairDistributionConstraint {
+public class SameAttendees extends PairDistributionConstraint {
     /**
      * Constructs a paired same attendees distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    SameAttendees(Class[] classes) {
+    public SameAttendees(Class[] classes) {
         super(classes);
     }
 

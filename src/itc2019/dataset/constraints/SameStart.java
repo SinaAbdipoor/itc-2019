@@ -9,13 +9,13 @@ import itc2019.dataset.Event;
  * Ci.start = Cj.start for any two classes Ci and Cj from the constraint; Ci.start is the assigned start time slot of a
  * class Ci.</p>
  */
-class SameStart extends PairDistributionConstraint {
+public class SameStart extends PairDistributionConstraint {
     /**
      * Constructs a paired same start distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    SameStart(Class[] classes) {
+    public SameStart(Class[] classes) {
         super(classes);
     }
 

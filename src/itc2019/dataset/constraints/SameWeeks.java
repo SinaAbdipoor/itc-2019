@@ -12,13 +12,13 @@ import utils.LogicalOperators;
  * weeks. This means that (Ci.weeks or Cj.weeks) = Ci.weeks) ∨ (Ci.weeks or Cj.weeks) = Cj.weeks) for any two classes
  * Ci and Cj from the constraint; doing binary "or" between the bit strings representing the assigned weeks.</p>
  */
-class SameWeeks extends PairDistributionConstraint {
+public class SameWeeks extends PairDistributionConstraint {
     /**
      * Constructs a paired same weeks distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    SameWeeks(Class[] classes) {
+    public SameWeeks(Class[] classes) {
         super(classes);
     }
 

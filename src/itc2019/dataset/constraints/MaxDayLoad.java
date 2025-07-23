@@ -19,7 +19,7 @@ import itc2019.dataset.Timetable;
  * of the semester (using integer division). Importantly the integer division is computed at the very end. That is
  * (penalty × ∑w,dmax(DayLoad(d,w) − S, 0)) / nrWeeks</p>
  */
-class MaxDayLoad extends DistributionConstraint {
+public class MaxDayLoad extends DistributionConstraint {
     private final int maxDayLoad; // S
 
     /**
@@ -29,7 +29,7 @@ class MaxDayLoad extends DistributionConstraint {
      * @param maxDayLoad The maximum allowed number of time slots to be assigned to a class on every day.
      * @throws IllegalArgumentException If the passed max day load is negative.
      */
-    MaxDayLoad(Class[] classes, int maxDayLoad) throws IllegalArgumentException {
+    public MaxDayLoad(Class[] classes, int maxDayLoad) throws IllegalArgumentException {
         super(classes);
         if (maxDayLoad < 0) throw new IllegalArgumentException("The maximum allowed day load cannot be negative!");
         this.maxDayLoad = maxDayLoad;

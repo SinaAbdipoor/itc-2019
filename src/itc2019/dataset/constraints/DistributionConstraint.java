@@ -22,7 +22,7 @@ import java.util.Arrays;
  * the maximal penalty for violation of one distribution constraint is penalty × N × (N − 1)/2, where N is the number of
  * classes in the constraint.</p>
  */
-abstract class DistributionConstraint {
+public abstract class DistributionConstraint {
     private final Class[] classes;
 
     /**
@@ -30,7 +30,7 @@ abstract class DistributionConstraint {
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    DistributionConstraint(Class[] classes) {
+    public DistributionConstraint(Class[] classes) {
         this.classes = classes;
     }
 

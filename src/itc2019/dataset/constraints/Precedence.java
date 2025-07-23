@@ -23,13 +23,13 @@ import utils.LogicalOperators;
  * for any two classes Ci and Cj from the constraint where i < j and first(x) is the index of the first non-zero bit in
  * the binary string x.</p>
  */
-class Precedence extends PairDistributionConstraint {
+public class Precedence extends PairDistributionConstraint {
     /**
      * Constructs a paired precedence distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    Precedence(Class[] classes) {
+    public Precedence(Class[] classes) {
         super(classes);
     }
 
