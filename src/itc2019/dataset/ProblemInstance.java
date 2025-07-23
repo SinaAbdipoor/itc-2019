@@ -36,12 +36,12 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
         if (nrWeeks < 1) throw new IllegalArgumentException("The number of weeks in a semester cannot be less than 1!");
         if (slotsPerDay < 1 || slotsPerDay > 288)
             throw new IllegalArgumentException("The number of slots (each slot is 5 mins) per day should be between 1 and 288!");
-        if (timePenaltyWeight < 1) throw new IllegalArgumentException("The time penalty weight should be above 0!");
-        if (roomPenaltyWeight < 1) throw new IllegalArgumentException("The room penalty weight should be above 0!");
-        if (distributionPenaltyWeight < 1)
-            throw new IllegalArgumentException("The distribution penalty weight should be above 0!");
-        if (studentPenaltyWeight < 1)
-            throw new IllegalArgumentException("The student penalty weight should be above 0!");
+        if (timePenaltyWeight < 0) throw new IllegalArgumentException("The time penalty weight cannot be negative!");
+        if (roomPenaltyWeight < 0) throw new IllegalArgumentException("The room penalty weight cannot be negative!");
+        if (distributionPenaltyWeight < 0)
+            throw new IllegalArgumentException("The distribution penalty weight cannot be negative!");
+        if (studentPenaltyWeight < 0)
+            throw new IllegalArgumentException("The student penalty weight cannot be negative!");
         if (travelTimes.getRowCount() != rooms.length)
             throw new IllegalArgumentException("The passed travel times is not of the size of total number of rooms in the problem instance!");
     }
