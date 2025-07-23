@@ -10,13 +10,13 @@ import utils.LogicalOperators;
  * that (Ci.weeks and Cj.weeks) = 0 for any two classes Ci and Cj from the constraint; doing binary "and" between the
  * bit strings representing the assigned weeks.</p>
  */
-class DifferentWeeks extends PairDistributionConstraint {
+public class DifferentWeeks extends PairDistributionConstraint {
     /**
      * Constructs a paired different weeks distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    DifferentWeeks(Class[] classes) {
+    public DifferentWeeks(Class[] classes) {
         super(classes);
     }
 

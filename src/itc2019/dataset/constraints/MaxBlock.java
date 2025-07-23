@@ -25,7 +25,7 @@ import java.util.Comparator;
  * computed over each day of the week and week of the semester and divided by the number of weeks of the semester at the
  * end (using integer division, just like for {@link MaxDayLoad}.).</p>
  */
-class MaxBlocks extends DistributionConstraint {
+public class MaxBlock extends DistributionConstraint {
     private final int maxBlockLength, extendedBreakLength; // M & S
 
     private record Block(int start, int end) {
@@ -41,7 +41,7 @@ class MaxBlocks extends DistributionConstraint {
      *                            break.
      * @throws IllegalArgumentException If the passed maxBlockLength or extendedBreakLength is negative.
      */
-    MaxBlocks(Class[] classes, int maxBlockLength, int extendedBreakLength) throws IllegalArgumentException {
+    public MaxBlock(Class[] classes, int maxBlockLength, int extendedBreakLength) throws IllegalArgumentException {
         super(classes);
         if (maxBlockLength < 0)
             throw new IllegalArgumentException("The maximum allowed length of a block in a day cannot be negative!");

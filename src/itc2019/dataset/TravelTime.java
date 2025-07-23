@@ -73,7 +73,7 @@ public class TravelTime {
      * @throws IllegalArgumentException  If the number of timeslots is negative.
      * @throws IndexOutOfBoundsException If room indices are out of bounds.
      */
-    void setTravelTime(Room room1, Room room2, int timeslots) throws IllegalArgumentException, IndexOutOfBoundsException {
+    public void setTravelTime(Room room1, Room room2, int timeslots) throws IllegalArgumentException, IndexOutOfBoundsException {
         if (timeslots < 0)
             throw new IllegalArgumentException("The number of timeslots needed to travel between two rooms cannot be negative!");
         travelTimes[room1.id() - 1][room2.id() - 1] = timeslots;

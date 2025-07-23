@@ -8,13 +8,13 @@ import itc2019.dataset.Event;
  * <p>Given classes should be placed in different rooms. This means that (Ci.room ≠ Cj.room) for any two classes Ci and
  * Cj from the constraint.</p>
  */
-class DifferentRoom extends PairDistributionConstraint {
+public class DifferentRoom extends PairDistributionConstraint {
     /**
      * Constructs a paired different room distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    DifferentRoom(Class[] classes) {
+    public DifferentRoom(Class[] classes) {
         super(classes);
     }
 

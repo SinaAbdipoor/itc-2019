@@ -14,13 +14,13 @@ import utils.LogicalOperators;
  * ((Ci.days or Cj.days) = Ci.days) ∨ ((Ci.days or Cj.days) = Cj.days) for any two classes Ci and Cj from the
  * constraint; Ci.days are the assigned days of the week of a class Ci, doing binary "or" between the bit strings.</p>
  */
-class SameDays extends PairDistributionConstraint {
+public class SameDays extends PairDistributionConstraint {
     /**
      * Constructs a paired same days distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    SameDays(Class[] classes) {
+    public SameDays(Class[] classes) {
         super(classes);
     }
 

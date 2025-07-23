@@ -14,13 +14,13 @@ import itc2019.dataset.Event;
  * This means that (Ci.start ≤ Cj.start ∧ Cj.end ≤ Ci.end) ∨ (Cj.start ≤ Ci.start ∧ Ci.end ≤ Cj.end) for any two classes
  * Ci and Cj from the constraint; Ci.end = Ci.start + Ci.length is the assigned end time slot of a class Ci.</p>
  */
-class SameTime extends PairDistributionConstraint {
+public class SameTime extends PairDistributionConstraint {
     /**
      * Constructs a paired same time distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    SameTime(Class[] classes) {
+    public SameTime(Class[] classes) {
         super(classes);
     }
 

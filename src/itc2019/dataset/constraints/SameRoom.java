@@ -8,13 +8,13 @@ import itc2019.dataset.Event;
  * <p>Given classes should be placed in the same room. This means that (Ci.room = Cj.room) for any two classes Ci and Cj
  * from the constraint; Ci.room is the assigned room of Ci.</p>
  */
-class SameRoom extends PairDistributionConstraint {
+public class SameRoom extends PairDistributionConstraint {
     /**
      * Constructs a paired same room distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    SameRoom(Class[] classes) {
+    public SameRoom(Class[] classes) {
         super(classes);
     }
 

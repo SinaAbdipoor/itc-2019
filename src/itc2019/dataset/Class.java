@@ -35,7 +35,7 @@ public record Class(int id, int limit, TimeAssignment[] possibleTimes, RoomAssig
      */
     public Class {
         if (id < 1) throw new IllegalArgumentException("Class id cannot be less than 1!");
-        if (limit < 1) throw new IllegalArgumentException("Class limit should be at least 1!");
+        if (limit < 0) throw new IllegalArgumentException("Class limit cannot be negative!");
         Arrays.sort(possibleTimes, Comparator.comparingInt(TimeAssignment::penalty));
         if (possibleRooms != null) Arrays.sort(possibleRooms, Comparator.comparingInt(RoomAssignment::penalty));
     }

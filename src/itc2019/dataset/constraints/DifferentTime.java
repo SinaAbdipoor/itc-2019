@@ -9,13 +9,13 @@ import itc2019.dataset.Event;
  * that no two classes of this constraint can overlap at a time of the day.
  * This means that (Ci.end ≤ Cj.start) ∨ (Cj.end ≤ Ci.start) for any two classes Ci and Cj from the constraint.</p>
  */
-class DifferentTime extends PairDistributionConstraint {
+public class DifferentTime extends PairDistributionConstraint {
     /**
      * Constructs a paired different time distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    DifferentTime(Class[] classes) {
+    public DifferentTime(Class[] classes) {
         super(classes);
     }
 

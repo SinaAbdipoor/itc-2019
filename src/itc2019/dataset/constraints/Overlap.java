@@ -11,13 +11,13 @@ import utils.LogicalOperators;
  * (Cj.start < Ci.end) ∧ (Ci.start < Cj.end) ∧ ((Ci.days and Cj.days) ≠ 0) ∧ ((Ci.weeks and Cj.weeks) ≠ 0) for any two
  * classes Ci and Cj from the constraint, doing binary "and" between days and weeks of Ci and Cj.</p>
  */
-class Overlap extends PairDistributionConstraint {
+public class Overlap extends PairDistributionConstraint {
     /**
      * Constructs a paired overlap distribution constraint object with the given classes.
      *
      * @param classes Classes that this distribution constraint applies to.
      */
-    Overlap(Class[] classes) {
+    public Overlap(Class[] classes) {
         super(classes);
     }
 

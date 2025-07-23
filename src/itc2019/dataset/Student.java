@@ -14,7 +14,7 @@ package itc2019.dataset;
  * for any pair of classes that a student cannot attend, regardless of the number of actual meetings that are in
  * conflict or the length of the overlapping time.</p>
  */
-record Student(int id, Course[] courses) {
+public record Student(int id, Course[] courses) {
     /**
      * Constructs a Student object.
      *
@@ -22,7 +22,7 @@ record Student(int id, Course[] courses) {
      * @param courses The list of courses that this student needs to take.
      * @throws IllegalArgumentException If the student id is invalid.
      */
-    Student {
+    public Student {
         if (id < 1) throw new IllegalArgumentException("Room id cannot be less than 1!");
     }
 

@@ -13,7 +13,7 @@ import utils.LogicalOperators;
  * ((Ci.days and Cj.days) = 0) ∨ ((Ci.weeks and Cj.weeks) = 0) ∨ (max(Ci.end,Cj.end)−min(Ci.start,Cj.start) ≤ S)
  * for any two classes Ci and Cj from the constraint.</p>
  */
-class WorkDays extends PairDistributionConstraint {
+public class WorkDay extends PairDistributionConstraint {
     private final int maxDayLength; //S
 
     /**
@@ -24,7 +24,7 @@ class WorkDays extends PairDistributionConstraint {
      *                     last class in a day.
      * @throws IllegalArgumentException If the passed max day length is negative.
      */
-    WorkDays(Class[] classes, int maxDayLength) throws IllegalArgumentException {
+    public WorkDay(Class[] classes, int maxDayLength) throws IllegalArgumentException {
         super(classes);
         if (maxDayLength < 0) throw new IllegalArgumentException("The max day length cannot be negative!");
         this.maxDayLength = maxDayLength;

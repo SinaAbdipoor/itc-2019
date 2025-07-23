@@ -13,7 +13,7 @@ import utils.LogicalOperators;
  * ((Ci.days and Cj.days) = 0) ∨ ((Ci.weeks and Cj.weeks) = 0) ∨ (Ci.end + G ≤ Cj.start) ∨ (Cj.end + G ≤ Ci.start)
  * for any two classes Ci and Cj from the constraint.</p>
  */
-class MinGap extends PairDistributionConstraint {
+public class MinGap extends PairDistributionConstraint {
     private final int minGap; //G
 
     /**
@@ -23,7 +23,7 @@ class MinGap extends PairDistributionConstraint {
      * @param minGap  The minimum number of time slots necessary between two classes in a day.
      * @throws IllegalArgumentException If the passed min gap is negative.
      */
-    MinGap(Class[] classes, int minGap) throws IllegalArgumentException {
+    public MinGap(Class[] classes, int minGap) throws IllegalArgumentException {
         super(classes);
         if (minGap < 0)
             throw new IllegalArgumentException("The minimum allowed gap between two classes cannot ne negative!");

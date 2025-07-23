@@ -12,7 +12,7 @@ import itc2019.dataset.Timetable;
  * where countNonzeroBits(x) returns the number of non-zero bits in the bit string x. When the constraint is soft, the
  * penalty is multiplied by the number of days that exceed the given constant D.</p>
  */
-class MaxDays extends DistributionConstraint {
+public class MaxDays extends DistributionConstraint {
     private final int maxDays; // D
 
     /**
@@ -22,7 +22,7 @@ class MaxDays extends DistributionConstraint {
      * @param maxDays The maximum allowed number of days of the week for classes to spread over.
      * @throws IllegalArgumentException If the passed maxDays is negative.
      */
-    MaxDays(Class[] classes, int maxDays) throws IllegalArgumentException {
+    public MaxDays(Class[] classes, int maxDays) throws IllegalArgumentException {
         super(classes);
         if (maxDays < 0 || maxDays > 7)
             throw new IllegalArgumentException("The maximum allowed number of days for classes to spread over cannot be negative!");
