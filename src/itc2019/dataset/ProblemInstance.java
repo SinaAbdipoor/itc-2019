@@ -45,4 +45,41 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
         if (travelTimes.getRowCount() != rooms.length)
             throw new IllegalArgumentException("The passed travel times is not of the size of total number of rooms in the problem instance!");
     }
+
+    /**
+     * Prints a summary of the problem instance for debugging and verification purposes.
+     * It includes structural parameters, penalty weights, and counts of entities and constraints.
+     */
+    public void printStats() {
+        System.out.println("========== Problem Instance Summary ==========");
+        System.out.println("Instance Name        : " + instanceName);
+        System.out.println("Weeks                : " + nrWeeks);
+        System.out.println("Days per Week        : " + nrDays);
+        System.out.println("Slots per Day        : " + slotsPerDay);
+        System.out.println();
+
+        System.out.println("Penalty Weights:");
+        System.out.println("  Time Penalty       : " + timePenaltyWeight);
+        System.out.println("  Room Penalty       : " + roomPenaltyWeight);
+        System.out.println("  Distribution Penalty: " + distributionPenaltyWeight);
+        System.out.println("  Student Penalty    : " + studentPenaltyWeight);
+        System.out.println();
+
+        System.out.println("Entity Counts:");
+        System.out.println("  Rooms              : " + rooms.length);
+        System.out.println("  Courses            : " + courses.length);
+        System.out.println("  Students           : " + students.length);
+        System.out.println("  Hard Constraints   : " + hardConstraints.length);
+        System.out.println("  Soft Constraints   : " + softConstraints.length);
+        System.out.println("  Total Constraints  : " + (hardConstraints.length + softConstraints.length));
+        System.out.println();
+
+        System.out.print("Travel Time Matrix   : ");
+        if (travelTimes != null) {
+            System.out.println(travelTimes.getRowCount() + " rows");
+        } else {
+            System.out.println("Not Loaded");
+        }
+        System.out.println("==============================================");
+    }
 }
