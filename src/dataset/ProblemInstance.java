@@ -52,8 +52,8 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
     public void printStats() {
         System.out.println("========== Problem Instance Summary ==========");
         System.out.println("Instance Name         : " + instanceName);
-        System.out.println("Weeks                 : " + nrWeeks);
         System.out.println("Days per Week         : " + nrDays);
+        System.out.println("Weeks                 : " + nrWeeks);
         System.out.println("Slots per Day         : " + slotsPerDay);
         System.out.println();
 
