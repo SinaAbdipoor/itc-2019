@@ -42,8 +42,6 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
             throw new IllegalArgumentException("The distribution penalty weight cannot be negative!");
         if (studentPenaltyWeight < 0)
             throw new IllegalArgumentException("The student penalty weight cannot be negative!");
-        if (travelTimes.getRowCount() != rooms.length)
-            throw new IllegalArgumentException("The passed travel times is not of the size of total number of rooms in the problem instance!");
     }
 
     /**
