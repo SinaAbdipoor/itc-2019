@@ -44,10 +44,12 @@ public class Parser {
         List<Room> roomList = new ArrayList<>();
         Map<Integer, Room> roomMap = new HashMap<>();
         List<int[]> travelEntries = new ArrayList<>(); // [fromId, toId, value]
+        int maxRoomId = 0;
         NodeList roomNodes = ((Element) root.getElementsByTagName("rooms").item(0)).getElementsByTagName("room");
         for (int i = 0; i < roomNodes.getLength(); i++) {
             Element roomElem = (Element) roomNodes.item(i);
             int roomId = Integer.parseInt(roomElem.getAttribute("id"));
+            maxRoomId = Math.max(maxRoomId, roomId);
             int capacity = Integer.parseInt(roomElem.getAttribute("capacity"));
 
             // Parse unavailable times
@@ -63,6 +65,7 @@ public class Parser {
             for (int j = 0; j < travelNodes.getLength(); j++) {
                 Element travelElem = (Element) travelNodes.item(j);
                 int toId = Integer.parseInt(travelElem.getAttribute("room"));
+                maxRoomId = Math.max(maxRoomId, toId);
                 int value = Integer.parseInt(travelElem.getAttribute("value"));
                 travelEntries.add(new int[]{roomId, toId, value});
             }
@@ -72,19 +75,20 @@ public class Parser {
             roomMap.put(roomId, room);
         }
 
-        // Build TravelTime matrix
-        TravelTime travelTime = TravelTime.createInstance(roomList.size());
+        // Build TravelTime matrix using maxRoomId
+        TravelTime travelTime = TravelTime.createInstance(maxRoomId);
         for (int[] entry : travelEntries) {
             Room from = roomMap.get(entry[0]);
             Room to = roomMap.get(entry[1]);
             travelTime.setTravelTime(from, to, entry[2]);
-            travelTime.setTravelTime(to, from, entry[2]); // symmetric
         }
 
-        // --- Parse Courses ---
+        // --- Parse Courses & Collect All Classes ---
         List<Course> courseList = new ArrayList<>();
         Map<Integer, Course> courseMap = new HashMap<>();
         Map<Integer, Class> classMap = new HashMap<>();
+        List<Class> allClassesList = new ArrayList<>();
+        Map<Integer, Integer> parentFixMap = new HashMap<>();
         NodeList courseNodes = ((Element) root.getElementsByTagName("courses").item(0)).getElementsByTagName("course");
         for (int i = 0; i < courseNodes.getLength(); i++) {
             Element courseElem = (Element) courseNodes.item(i);
@@ -110,12 +114,9 @@ public class Parser {
                         int limit = Integer.parseInt(classElem.getAttribute("limit"));
                         boolean needRoom = !"false".equals(classElem.getAttribute("room"));
 
-                        // Parent class
-                        Class parent = null;
-                        if (classElem.hasAttribute("parent")) {
-                            int parentId = Integer.parseInt(classElem.getAttribute("parent"));
-                            parent = classMap.get(parentId); // Will be set after all classes are parsed
-                        }
+                        // Parent class (store parentId for later fix)
+                        Integer parentId = classElem.hasAttribute("parent") ?
+                                Integer.parseInt(classElem.getAttribute("parent")) : null;
 
                         // Parse possible rooms
                         List<RoomAssignment> possibleRooms = new ArrayList<>();
@@ -137,15 +138,22 @@ public class Parser {
                             possibleTimes.add(new TimeAssignment(time, penalty));
                         }
 
+                        // Temporarily set parent to null, fix later
                         Class clazz = new Class(
                                 classId,
                                 limit,
                                 possibleTimes.toArray(new TimeAssignment[0]),
                                 needRoom ? possibleRooms.toArray(new RoomAssignment[0]) : null,
-                                parent
+                                null
                         );
                         subpartClasses.add(clazz);
                         classMap.put(classId, clazz);
+                        allClassesList.add(clazz);
+
+                        // Store parentId for later fix
+                        if (parentId != null) {
+                            parentFixMap.put(classId, parentId);
+                        }
                     }
                     subpartList.add(new Subpart(subpartId, subpartClasses.toArray(new Class[0])));
                 }
@@ -157,10 +165,31 @@ public class Parser {
         }
 
         // --- Fix parent references for classes ---
-        for (Class clazz : classMap.values()) {
-            if (clazz.parent() != null && clazz.parent().id() != clazz.parent().id()) {
-                clazz = new Class(clazz.id(), clazz.limit(), clazz.possibleTimes(), clazz.possibleRooms(), classMap.get(clazz.parent().id()));
-                classMap.put(clazz.id(), clazz);
+        for (Class clazz : allClassesList) {
+            Integer parentId = parentFixMap.get(clazz.id());
+            if (parentId != null) {
+                Class parent = classMap.get(parentId);
+                // Create a new Class object with the correct parent
+                Class fixed = new Class(clazz.id(), clazz.limit(), clazz.possibleTimes(), clazz.possibleRooms(), parent);
+                classMap.put(clazz.id(), fixed);
+                // Replace in allClassesList
+                int idx = allClassesList.indexOf(clazz);
+                allClassesList.set(idx, fixed);
+            }
+        }
+        // Now update all references in subparts/configs/courses to point to the fixed Class objects
+        for (Course course : courseList) {
+            for (Config config : course.configs()) {
+                for (Subpart subpart : config.subparts()) {
+                    Class[] updatedClasses = Arrays.stream(subpart.classes())
+                            .map(c -> classMap.get(c.id()))
+                            .toArray(Class[]::new);
+                    // Replace classes in subpart
+                    Subpart updatedSubpart = new Subpart(subpart.id(), updatedClasses);
+                    // Replace subpart in config
+                    int subpartIdx = Arrays.asList(config.subparts()).indexOf(subpart);
+                    config.subparts()[subpartIdx] = updatedSubpart;
+                }
             }
         }
 
@@ -221,7 +250,8 @@ public class Parser {
                 hardConstraints.toArray(new HardConstraint[0]),
                 softConstraints.toArray(new SoftConstraint[0]),
                 studentList.toArray(new Student[0]),
-                travelTime
+                travelTime//,
+                // allClassesList.toArray(new Class[0]) // <-- pass all classes here
         );
     }
 
