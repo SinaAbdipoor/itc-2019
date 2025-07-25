@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Encoder extends DefaultHandler {
-//    private String currentElement;
     private String instanceName;
     private int nrDays;
     private int nrWeeks;
@@ -52,12 +51,10 @@ public class Encoder extends DefaultHandler {
     private Subpart[] subparts;
     private Class aClass;
     private Class[] classes;
-//    private Class allClass;
     private Class[] allClasses;
     private boolean inCourses;
     private int classId;
     private int limit;
-//    private ArrayList<Integer> parentClass;
     private int subpartId;
     private int configId;
     private int courseId;
@@ -82,7 +79,7 @@ public class Encoder extends DefaultHandler {
     private NoConfig[] noConfigs;
     private NoSubpart noSubpart;
     private NoSubpart[] noSubparts;
-    private NoClass noaClass;
+    private NoClass noClass;
     private NoClass[] noClasses;
     private boolean isParent;
     private int parent;
@@ -137,6 +134,14 @@ public class Encoder extends DefaultHandler {
 
     private ProblemInstance problemInstance;
 
+    /**
+     * Creates a new Encoder instance and parses the XML file at the given file path.
+     * 
+     * @param filePath Path to the XML file to be parsed
+     * @throws ParserConfigurationException If there is a configuration error with the SAX parser
+     * @throws SAXException If there is an error during XML parsing
+     * @throws IOException If there is an error reading the file
+     */
     public Encoder(String filePath) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
@@ -149,65 +154,41 @@ public class Encoder extends DefaultHandler {
         problemInstance = new ProblemInstance(instanceName, nrDays, nrWeeks, slotsPerDay, timePenaltyWeight, roomPenaltyWeight, distributionPenaltyWeight, studentPenaltyWeight, rooms, courses, hardConstraints, softConstraints, students, travelTime);
     }
 
+    /**
+     * Returns the parsed problem instance.
+     * 
+     * @return The ProblemInstance object created from the parsed XML file
+     */
     public ProblemInstance getProblemInstance() {
         return problemInstance;
     }
+    /**
+     * Called when the SAX parser encounters an opening tag in the XML document.
+     * This method processes the start element and its attributes.
+     * 
+     * @param uri The namespace URI, or an empty string if the element has no namespace URI
+     * @param localName The local name (without prefix), or an empty string if namespace processing is not being performed
+     * @param qName The qualified name (with prefix)
+     * @param attributes The attributes attached to the element
+     */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-//        currentElement = qName;
         // If we find the <problem...
         if ("problem".equalsIgnoreCase(qName)) {
-            // Find the attributes in this set
-            instanceName = attributes.getValue("name");
-            nrDays = Integer.parseInt(attributes.getValue("nrDays"));// Turn the String into Integer directly
-            nrWeeks = Integer.parseInt(attributes.getValue("nrWeeks"));
-            slotsPerDay = Integer.parseInt(attributes.getValue("slotsPerDay"));
+            handleProblem(attributes);
         }
         else if ("optimization".equalsIgnoreCase(qName)) {
-            timePenaltyWeight = Integer.parseInt(attributes.getValue("time"));
-            roomPenaltyWeight = Integer.parseInt(attributes.getValue("room"));
-            distributionPenaltyWeight = Integer.parseInt(attributes.getValue("distribution"));
-            studentPenaltyWeight = Integer.parseInt(attributes.getValue("student"));
+            handleOptimization(attributes);
         }
         else if ("rooms".equalsIgnoreCase(qName)) {
-            inRooms = true;
-            roomList = new ArrayList<>();
-            travelEntries = new ArrayList<>();
+            handleRoomsStart();
         }
         else if (inRooms) {
-            if ("room".equalsIgnoreCase(qName)) {
-                roomId = Integer.parseInt(attributes.getValue("id"));
-                roomCapacity = Integer.parseInt(attributes.getValue("capacity"));
-                unavailableTimes = new ArrayList<>();
-            }
-            else if ("travel".equalsIgnoreCase(qName)) {
-                int travelRoom = Integer.parseInt(attributes.getValue("room"));
-                int travelValue = Integer.parseInt(attributes.getValue("value"));
-                // Add the travel value to the ArrayList first
-                travelEntries.add(new TravelEntry(roomId, travelRoom, travelValue));
-            }
-            else if ("unavailable".equalsIgnoreCase(qName)) {
-                String daysStr = attributes.getValue("days");
-                boolean[] days = new boolean[daysStr.length()];
-                for (int i=0; i<days.length; i++) {
-                    days[i] = daysStr.charAt(i) == '1';
-                }
-                int start = Integer.parseInt(attributes.getValue("start"));
-                int length = Integer.parseInt(attributes.getValue("length"));
-                String weeksStr = attributes.getValue("weeks");
-                boolean[] weeks = new boolean[weeksStr.length()];
-                for (int i=0; i<weeks.length; i++) {
-                    weeks[i] = weeksStr.charAt(i) == '1';
-                }
-                time = new Time(nrWeeks, nrDays, weeks, days, start, length);
-                unavailableTimes.add(time);
-            }
+            handleRoomElements(qName, attributes);
         }
         else if ("courses".equalsIgnoreCase(qName)) {
             inCourses = true;
             noCourseList = new ArrayList<>();
-//            parentClass = new ArrayList<>();
-//            allClassList = new ArrayList<>();
         }
         else if (inCourses) {
             if ("course".equalsIgnoreCase(qName)) {
@@ -243,29 +224,23 @@ public class Encoder extends DefaultHandler {
             else if ("room".equalsIgnoreCase(qName)) {
                 int rId = Integer.parseInt(attributes.getValue("id"));
                 int penalty = Integer.parseInt(attributes.getValue("penalty"));
-                Room coureRoom = null;
+                Room courseRoom = null;
                 for (Room r : rooms) {
                     if (r.id() == rId) {
-                        coureRoom = r;
+                        courseRoom = r;
                         break;
                     }
                 }
-                roomAssignment = new RoomAssignment(coureRoom, penalty);
+                roomAssignment = new RoomAssignment(courseRoom, penalty);
                 roomAssignmentList.add(roomAssignment);
             }
             else if ("time".equalsIgnoreCase(qName)) {
                 String daysStr = attributes.getValue("days");
-                boolean[] days = new boolean[daysStr.length()];
-                for (int i=0; i<days.length; i++) {
-                    days[i] = daysStr.charAt(i) == '1';
-                }
+                boolean[] days = parseBooleanArray(daysStr);
                 int start = Integer.parseInt(attributes.getValue("start"));
                 int length = Integer.parseInt(attributes.getValue("length"));
                 String weeksStr = attributes.getValue("weeks");
-                boolean[] weeks = new boolean[weeksStr.length()];
-                for (int i=0; i<weeks.length; i++) {
-                    weeks[i] = weeksStr.charAt(i) == '1';
-                }
+                boolean[] weeks = parseBooleanArray(weeksStr);
                 int penalty = Integer.parseInt(attributes.getValue("penalty"));
                 time = new Time(nrWeeks, nrDays, weeks, days, start, length);
                 timeAssignment = new TimeAssignment(time, penalty);
@@ -329,158 +304,153 @@ public class Encoder extends DefaultHandler {
         }
     }
 
+    /**
+     * Handle the problem tag
+     */
+    private void handleProblem(Attributes attributes) {
+        instanceName = attributes.getValue("name");
+        nrDays = Integer.parseInt(attributes.getValue("nrDays"));
+        nrWeeks = Integer.parseInt(attributes.getValue("nrWeeks"));
+        slotsPerDay = Integer.parseInt(attributes.getValue("slotsPerDay"));
+    }
+
+    /**
+     * Handle the optimization tag
+     */
+    private void handleOptimization(Attributes attributes) {
+        timePenaltyWeight = Integer.parseInt(attributes.getValue("time"));
+        roomPenaltyWeight = Integer.parseInt(attributes.getValue("room"));
+        distributionPenaltyWeight = Integer.parseInt(attributes.getValue("distribution"));
+        studentPenaltyWeight = Integer.parseInt(attributes.getValue("student"));
+    }
+
+    /**
+     * Initialize room related lists
+     */
+    private void handleRoomsStart() {
+        inRooms = true;
+        roomList = new ArrayList<>();
+        travelEntries = new ArrayList<>();
+    }
+
+    /**
+     * Handle elements inside rooms tag
+     */
+    private void handleRoomElements(String qName, Attributes attributes) {
+        if ("room".equalsIgnoreCase(qName)) {
+            roomId = Integer.parseInt(attributes.getValue("id"));
+            roomCapacity = Integer.parseInt(attributes.getValue("capacity"));
+            unavailableTimes = new ArrayList<>();
+        }
+        else if ("travel".equalsIgnoreCase(qName)) {
+            int travelRoom = Integer.parseInt(attributes.getValue("room"));
+            int travelValue = Integer.parseInt(attributes.getValue("value"));
+            // Add the travel value to the ArrayList first
+            travelEntries.add(new TravelEntry(roomId, travelRoom, travelValue));
+        }
+        else if ("unavailable".equalsIgnoreCase(qName)) {
+            String daysStr = attributes.getValue("days");
+            boolean[] days = parseBooleanArray(daysStr);
+            int start = Integer.parseInt(attributes.getValue("start"));
+            int length = Integer.parseInt(attributes.getValue("length"));
+            String weeksStr = attributes.getValue("weeks");
+            boolean[] weeks = parseBooleanArray(weeksStr);
+            time = new Time(nrWeeks, nrDays, weeks, days, start, length);
+            unavailableTimes.add(time);
+        }
+    }
+
+    /**
+     * Called when the SAX parser encounters a closing tag in the XML document.
+     * This method processes the end element based on the current parsing context.
+     *
+     * @param uri The namespace URI, or an empty string if the element has no namespace URI
+     * @param localName The local name (without prefix), or an empty string if namespace processing is not being performed
+     * @param qName The qualified name (with prefix)
+     */
     @Override
     public void endElement(String uri, String localName, String qName) {
         if (inRooms) {
-            if ("room".equalsIgnoreCase(qName)) {
-                unavailable = unavailableTimes.toArray(new Time[0]);// Convert ArrayList to Array
-                room = new Room(roomId, roomCapacity, unavailable);
-                roomList.add(room);
-            }
-            else if ("rooms".equalsIgnoreCase(qName)) {
-                inRooms = false;
-                rooms = roomList.toArray(new Room[0]);
-                for (Room r : rooms) {
-                    maxRoomId = r.id();
-                }
-                travelTime = TravelTime.createInstance(maxRoomId);
-                fillTravelMatrix();
-            }
+            handleRoomsEnd(qName);
         }
         else if (inCourses) {
-            if ("class".equalsIgnoreCase(qName)) {
-                if (needRoom) roomAssignments = roomAssignmentList.toArray(new RoomAssignment[0]);
-                else roomAssignments = null;
-                timeAssignments = timeAssignmentList.toArray(new TimeAssignment[0]);
-                noaClass = new NoClass(classId, limit, timeAssignments, roomAssignments, isParent, parent, false);
-                noClassList.add(noaClass);
-                noAllArray.add(noaClass);
-//                allClassList.add(noaClass);
-            }
-            else if ("subpart".equalsIgnoreCase(qName)) {
-                noClasses = noClassList.toArray(new NoClass[0]);
-                noSubpart = new NoSubpart(subpartId, noClasses);
-                noSubpartList.add(noSubpart);
-            }
-            else if ("config".equalsIgnoreCase(qName)) {
-                noSubparts = noSubpartList.toArray(new NoSubpart[0]);
-                noConfig = new NoConfig(configId, noSubparts);
-                noConfigList.add(noConfig);
-            }
-            else if ("course".equalsIgnoreCase(qName)) {
-                noConfigs = noConfigList.toArray(new NoConfig[0]);
-                noCourse = new NoCourse(courseId, noConfigs);
-                noCourseList.add(noCourse);
-            }
-            else if ("courses".equalsIgnoreCase(qName)) {
-                inCourses = false;
-                noCourses = noCourseList.toArray(new NoCourse[0]);
-                createParentClass();
-                courseList = new ArrayList<>();
-                allClassList = new ArrayList<>();
-                fillCourses();
-                courses = courseList.toArray(new Course[0]);
-                allClasses = allClassList.toArray(new Class[0]);
-            }
+            handleCoursesEnd(qName);
         }
         else if (inDistributions) {
-            if ("distribution".equalsIgnoreCase(qName)) {
-                DistributionConstraint currentConstraint = null;
-                disClasses = classList.toArray(new Class[0]);
-                if (type.equals("DifferentDays")) {
-                    currentConstraint = differentDays = new DifferentDays(disClasses);
-                }
-                else if (type.equals("DifferentRoom")) {
-                    currentConstraint = differentRoom = new DifferentRoom(disClasses);
-                }
-                else if (type.equals("DifferentTime")) {
-                    currentConstraint = differentTime = new DifferentTime(disClasses);
-                }
-                else if (type.equals("DifferentWeeks")) {
-                    currentConstraint = differentWeeks = new DifferentWeeks(disClasses);
-                }
-                else if (type.equals("SameStart")) {
-                    currentConstraint = sameStart = new SameStart(disClasses);
-                }
-                else if (type.equals("SameTime")) {
-                    currentConstraint = sameTime = new SameTime(disClasses);
-                }
-                else if (type.equals("SameDays")) {
-                    currentConstraint = sameDays = new SameDays(disClasses);
-                }
-                else if (type.equals("SameWeeks")) {
-                    currentConstraint = sameWeeks = new SameWeeks(disClasses);
-                }
-                else if (type.equals("Overlap")) {
-                    currentConstraint = overlap = new Overlap(disClasses);
-                }
-                else if (type.equals("NotOverlap")) {
-                    currentConstraint = notOverlap = new NotOverlap(disClasses);
-                }
-                else if (type.equals("SameRoom")) {
-                    currentConstraint = sameRoom = new SameRoom(disClasses);
-                }
-                else if (type.equals("SameAttendees")) {
-                    currentConstraint = sameAttendees = new SameAttendees(disClasses);
-                }
-                else if (type.equals("Precedence")) {
-                    currentConstraint = precedence = new Precedence(disClasses);
-                }
-                else if (type.contains("(")&&type.contains(")")) {
-                    String baseType = type.substring(0, type.indexOf("("));
-                    String paramsStr = type.substring(type.indexOf("(") + 1, type.indexOf(")"));
-
-                    String[] params = paramsStr.split(",");
-                    int[] intParams = new int[params.length];
-                    for (int i = 0; i < params.length; i++) {
-                        intParams[i] = Integer.parseInt(params[i].trim());
-                    }
-
-                    switch (baseType) {
-                        case "WorkDay" -> currentConstraint = workDay = new WorkDay(disClasses, intParams[0]);
-                        case "MinGap" -> currentConstraint = minGap = new MinGap(disClasses, intParams[0]);
-                        case "MaxDays" -> currentConstraint = maxDays = new MaxDays(disClasses, intParams[0]);
-                        case "MaxDayLoad" -> currentConstraint = maxDayLoad = new MaxDayLoad(disClasses, intParams[0]);
-                        case "MaxBreaks" -> currentConstraint = maxBreaks = new MaxBreaks(disClasses, intParams[0], intParams[1]);
-                        case "MaxBlock" -> currentConstraint = maxBlock = new MaxBlock(disClasses, intParams[0], intParams[1]);
-                    }
-                }
-
-                if (isHard) {
-                    haveHard = true;
-                    hardConstraint = new HardConstraint(currentConstraint);
-                    hardConstraintList.add(hardConstraint);
-                }
-                else {
-                    haveSoft = true;
-                    softConstraint = new SoftConstraint(currentConstraint, disPenalty);
-                    softConstraintList.add(softConstraint);
-                }
-            }
-            else if ("distributions".equalsIgnoreCase(qName)) {
-                if (haveHard) hardConstraints = hardConstraintList.toArray(new HardConstraint[0]);
-                if (haveSoft) softConstraints = softConstraintList.toArray(new SoftConstraint[0]);
-                inDistributions = false;
-            }
+            handleDistributionsEnd(qName);
         }
         else if (inStudents) {
-            if ("student".equalsIgnoreCase(qName)) {
-                stuCourses = stuCourseList.toArray(new Course[0]);
-                student = new Student(studentId, stuCourses);
-                studentList.add(student);
-            }
-            else if ("students".equalsIgnoreCase(qName)) {
-                if (haveStudents) {
-                    students = studentList.toArray(new Student[0]);
-                }
-                else students = null;
-                inStudents = false;
-            }
+            handleStudentsEnd(qName);
         }
         else if ("problem".equalsIgnoreCase(qName)) {
         }
     }
 
+    /**
+     * Handle end tags for rooms
+     */
+    private void handleRoomsEnd(String qName) {
+        if ("room".equalsIgnoreCase(qName)) {
+            unavailable = unavailableTimes.toArray(new Time[0]);
+            room = new Room(roomId, roomCapacity, unavailable);
+            roomList.add(room);
+        }
+        else if ("rooms".equalsIgnoreCase(qName)) {
+            inRooms = false;
+            rooms = roomList.toArray(new Room[0]);
+            for (Room r : rooms) {
+                maxRoomId = r.id();
+            }
+            travelTime = TravelTime.createInstance(maxRoomId);
+            fillTravelMatrix();
+        }
+    }
+
+    /**
+     * Handle end tags for courses
+     */
+    private void handleCoursesEnd(String qName) {
+        if ("class".equalsIgnoreCase(qName)) {
+            if (needRoom) roomAssignments = roomAssignmentList.toArray(new RoomAssignment[0]);
+            else roomAssignments = null;
+            timeAssignments = timeAssignmentList.toArray(new TimeAssignment[0]);
+            noClass = new NoClass(classId, limit, timeAssignments, roomAssignments, isParent, parent, false);
+            noClassList.add(noClass);
+            noAllArray.add(noClass);
+        }
+        else if ("subpart".equalsIgnoreCase(qName)) {
+            noClasses = noClassList.toArray(new NoClass[0]);
+            noSubpart = new NoSubpart(subpartId, noClasses);
+            noSubpartList.add(noSubpart);
+        }
+        else if ("config".equalsIgnoreCase(qName)) {
+            noSubparts = noSubpartList.toArray(new NoSubpart[0]);
+            noConfig = new NoConfig(configId, noSubparts);
+            noConfigList.add(noConfig);
+        }
+        else if ("course".equalsIgnoreCase(qName)) {
+            noConfigs = noConfigList.toArray(new NoConfig[0]);
+            noCourse = new NoCourse(courseId, noConfigs);
+            noCourseList.add(noCourse);
+        }
+        else if ("courses".equalsIgnoreCase(qName)) {
+            inCourses = false;
+            noCourses = noCourseList.toArray(new NoCourse[0]);
+            createParentClass();
+            courseList = new ArrayList<>();
+            allClassList = new ArrayList<>();
+            fillCourses();
+            courses = courseList.toArray(new Course[0]);
+            allClasses = allClassList.toArray(new Class[0]);
+        }
+    }
+
+    /**
+     * Returns a string representation of the problem instance.
+     * This method prints all components of the problem instance and returns a null character.
+     * 
+     * @return A null character after printing the problem details
+     */
     @Override
     public String toString() {
         printRooms();
@@ -491,6 +461,9 @@ public class Encoder extends DefaultHandler {
         return "\0";
     }
 
+    /**
+     * Print rooms information
+     */
     public void printRooms() {
         if (rooms == null || rooms.length == 0) System.out.println("No rooms available!");
         else {
@@ -517,10 +490,16 @@ public class Encoder extends DefaultHandler {
         }
     }
 
+    /**
+     * Print travel time matrix
+     */
     public void printTravelMatrix() {
         System.out.println(travelTime);
     }
 
+    /**
+     * Print courses information
+     */
     public void printCourses() {
         for (Course i : courses) {
             System.out.println("Course: " + i.id());
@@ -561,6 +540,9 @@ public class Encoder extends DefaultHandler {
         }
     }
 
+    /**
+     * Print students information
+     */
     public void printStudents() {
         if (students != null) {
             for (Student s : students) {
@@ -573,6 +555,9 @@ public class Encoder extends DefaultHandler {
         else System.out.println("No Students!");
     }
 
+    /**
+     * Print distribution constraints information
+     */
     public void printDistribution() {
         if (haveHard) {
             System.out.println("HardConstraints:");
@@ -614,6 +599,19 @@ public class Encoder extends DefaultHandler {
             }
             travelTime.setTravelTime(fIndexRoom, toIndexRoom, entry.time);
         }
+    }
+    
+    /**
+     * Parse a string into a boolean array, '1' means true, other characters mean false
+     * @param str String containing 0s and 1s
+     * @return Corresponding boolean array
+     */
+    private boolean[] parseBooleanArray(String str) {
+        boolean[] result = new boolean[str.length()];
+        for (int i = 0; i < str.length(); i++) {
+            result[i] = str.charAt(i) == '1';
+        }
+        return result;
     }
 
     private static class NoCourse {
@@ -716,7 +714,6 @@ public class Encoder extends DefaultHandler {
                     for (NoClass p : f) {
                         int noClassId = p.id;
                         int noLimit = p.limit;
-//                        if (p.limit<1) System.out.println(p.id);
                         RoomAssignment[] noRoom = p.possibleRooms;
                         TimeAssignment[] noTime = p.possibleTimes;
                         Class findParent = null;
@@ -742,6 +739,108 @@ public class Encoder extends DefaultHandler {
             configs = configList.toArray(new Config[0]);
             course = new Course(noCourseId, configs);
             courseList.add(course);
+        }
+    }
+
+    /**
+     * Handle end tags for distributions
+     */
+    private void handleDistributionsEnd(String qName) {
+        if ("distribution".equalsIgnoreCase(qName)) {
+            DistributionConstraint currentConstraint = null;
+            disClasses = classList.toArray(new Class[0]);
+            if (type.equals("DifferentDays")) {
+                currentConstraint = differentDays = new DifferentDays(disClasses);
+            }
+            else if (type.equals("DifferentRoom")) {
+                currentConstraint = differentRoom = new DifferentRoom(disClasses);
+            }
+            else if (type.equals("DifferentTime")) {
+                currentConstraint = differentTime = new DifferentTime(disClasses);
+            }
+            else if (type.equals("DifferentWeeks")) {
+                currentConstraint = differentWeeks = new DifferentWeeks(disClasses);
+            }
+            else if (type.equals("SameStart")) {
+                currentConstraint = sameStart = new SameStart(disClasses);
+            }
+            else if (type.equals("SameTime")) {
+                currentConstraint = sameTime = new SameTime(disClasses);
+            }
+            else if (type.equals("SameDays")) {
+                currentConstraint = sameDays = new SameDays(disClasses);
+            }
+            else if (type.equals("SameWeeks")) {
+                currentConstraint = sameWeeks = new SameWeeks(disClasses);
+            }
+            else if (type.equals("Overlap")) {
+                currentConstraint = overlap = new Overlap(disClasses);
+            }
+            else if (type.equals("NotOverlap")) {
+                currentConstraint = notOverlap = new NotOverlap(disClasses);
+            }
+            else if (type.equals("SameRoom")) {
+                currentConstraint = sameRoom = new SameRoom(disClasses);
+            }
+            else if (type.equals("SameAttendees")) {
+                currentConstraint = sameAttendees = new SameAttendees(disClasses);
+            }
+            else if (type.equals("Precedence")) {
+                currentConstraint = precedence = new Precedence(disClasses);
+            }
+            else if (type.contains("(")&&type.contains(")")) {
+                String baseType = type.substring(0, type.indexOf("("));
+                String paramsStr = type.substring(type.indexOf("(") + 1, type.indexOf(")"));
+
+                String[] params = paramsStr.split(",");
+                int[] intParams = new int[params.length];
+                for (int i = 0; i < params.length; i++) {
+                    intParams[i] = Integer.parseInt(params[i].trim());
+                }
+
+                switch (baseType) {
+                    case "WorkDay" -> currentConstraint = workDay = new WorkDay(disClasses, intParams[0]);
+                    case "MinGap" -> currentConstraint = minGap = new MinGap(disClasses, intParams[0]);
+                    case "MaxDays" -> currentConstraint = maxDays = new MaxDays(disClasses, intParams[0]);
+                    case "MaxDayLoad" -> currentConstraint = maxDayLoad = new MaxDayLoad(disClasses, intParams[0]);
+                    case "MaxBreaks" -> currentConstraint = maxBreaks = new MaxBreaks(disClasses, intParams[0], intParams[1]);
+                    case "MaxBlock" -> currentConstraint = maxBlock = new MaxBlock(disClasses, intParams[0], intParams[1]);
+                }
+            }
+
+            if (isHard) {
+                haveHard = true;
+                hardConstraint = new HardConstraint(currentConstraint);
+                hardConstraintList.add(hardConstraint);
+            }
+            else {
+                haveSoft = true;
+                softConstraint = new SoftConstraint(currentConstraint, disPenalty);
+                softConstraintList.add(softConstraint);
+            }
+        }
+        else if ("distributions".equalsIgnoreCase(qName)) {
+            if (haveHard) hardConstraints = hardConstraintList.toArray(new HardConstraint[0]);
+            if (haveSoft) softConstraints = softConstraintList.toArray(new SoftConstraint[0]);
+            inDistributions = false;
+        }
+    }
+
+    /**
+     * Handle end tags for students
+     */
+    private void handleStudentsEnd(String qName) {
+        if ("student".equalsIgnoreCase(qName)) {
+            stuCourses = stuCourseList.toArray(new Course[0]);
+            student = new Student(studentId, stuCourses);
+            studentList.add(student);
+        }
+        else if ("students".equalsIgnoreCase(qName)) {
+            if (haveStudents) {
+                students = studentList.toArray(new Student[0]);
+            }
+            else students = null;
+            inStudents = false;
         }
     }
 }
