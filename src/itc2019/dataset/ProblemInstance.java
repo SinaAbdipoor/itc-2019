@@ -47,6 +47,7 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
     /**
      * Prints a summary of the problem instance for debugging and verification purposes.
      * It includes structural parameters, penalty weights, and counts of entities and constraints.
+     * Null-safe: handles cases where any array or object might not have been initialized.
      */
     public void printStats() {
         System.out.println("========== Problem Instance Summary ==========");
@@ -64,15 +65,18 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
         System.out.println();
 
         System.out.println("Entity Counts:");
-        System.out.println("  Rooms               : " + rooms.length);
-        System.out.println("  Courses             : " + courses.length);
-        System.out.println("  Students            : " + students.length);
-        System.out.println("  Hard Constraints    : " + hardConstraints.length);
-        System.out.println("  Soft Constraints    : " + softConstraints.length);
-        System.out.println("  Total Constraints   : " + (hardConstraints.length + softConstraints.length));
+        System.out.println("  Rooms               : " + (rooms != null ? rooms.length : "Not Loaded"));
+        System.out.println("  Courses             : " + (courses != null ? courses.length : "Not Loaded"));
+        System.out.println("  Students            : " + (students != null ? students.length : "Not Loaded"));
+        System.out.println("  Hard Constraints    : " + (hardConstraints != null ? hardConstraints.length : "Not Loaded"));
+        System.out.println("  Soft Constraints    : " + (softConstraints != null ? softConstraints.length : "Not Loaded"));
+
+        int totalConstraints = (hardConstraints != null ? hardConstraints.length : 0) + (softConstraints != null ? softConstraints.length : 0);
+        boolean constraintsLoaded = hardConstraints != null || softConstraints != null;
+        System.out.println("  Total Constraints   : " + (constraintsLoaded ? totalConstraints : "Not Loaded"));
         System.out.println();
 
-        System.out.print("Travel Time Matrix   : ");
+        System.out.print("Travel Time Matrix      : ");
         if (travelTimes != null) {
             System.out.println(travelTimes.getRowCount() + " rows");
         } else {
