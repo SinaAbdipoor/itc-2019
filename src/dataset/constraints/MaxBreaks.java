@@ -52,7 +52,7 @@ public class MaxBreaks extends DistributionConstraint {
     }
 
     @Override
-    boolean isSatisfied(Timetable timetable) throws NullPointerException {
+    public boolean isSatisfied(Timetable timetable) throws NullPointerException {
         // |MergeBlocks{(C.start, C.end) | (C.days and 2d) ≠ 0 ∧ (C.weeks and 2w) ≠ 0})| ≤ R + 1
         final int weeksLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().weeks().length, daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;
         Time eventTime;
@@ -85,7 +85,7 @@ public class MaxBreaks extends DistributionConstraint {
     }
 
     @Override
-    int violationCount(Timetable timetable) throws NullPointerException {
+    public int violationCount(Timetable timetable) throws NullPointerException {
         final int weeksLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().weeks().length, daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;
         Time eventTime;
         ArrayList<Block> dayEvents;

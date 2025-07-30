@@ -56,7 +56,7 @@ public abstract class DistributionConstraint {
      * @return false as soon as there's a violation; true if this constraint is satisfied for the given timetable.
      * @throws NullPointerException If the given timetable is half or not scheduled.
      */
-    abstract boolean isSatisfied(Timetable timetable) throws NullPointerException;
+    public abstract boolean isSatisfied(Timetable timetable) throws NullPointerException;
 
     /**
      * Counts the number of times that the given timetable violates this constraint over its classes.
@@ -65,5 +65,5 @@ public abstract class DistributionConstraint {
      * @return Violation count of the given timetable.
      * @throws NullPointerException If the given timetable is half or not scheduled.
      */
-    abstract int violationCount(Timetable timetable) throws NullPointerException;
+    public abstract int violationCount(Timetable timetable) throws NullPointerException;
 }

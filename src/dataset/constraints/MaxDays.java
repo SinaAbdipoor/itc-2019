@@ -32,7 +32,7 @@ public class MaxDays extends DistributionConstraint {
     // TODO: Is there a better way to get the days and weeks lengths in isSatisfied and violationCount methods for this, maxDayLoad, maxBreaks, maxBlock and soft constraint classes?
     // TODO: Verify and optimize this, maxDayLoad, maxBreaks, and maxBlock constraint classes.
     @Override
-    boolean isSatisfied(Timetable timetable) throws NullPointerException {
+    public boolean isSatisfied(Timetable timetable) throws NullPointerException {
         // countNonzeroBits(C1.days or C2.days or ⋅ ⋅ ⋅ Cn.days) ≤ D
         int counter = 0;
         final int daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;
@@ -48,7 +48,7 @@ public class MaxDays extends DistributionConstraint {
     }
 
     @Override
-    int violationCount(Timetable timetable) throws NullPointerException {
+    public int violationCount(Timetable timetable) throws NullPointerException {
         int counter = 0;
         final int daysLength = timetable.getEvent(getClasses()[0]).getTimeAssignment().time().days().length;
         for (int i = 0; i < daysLength; i++)

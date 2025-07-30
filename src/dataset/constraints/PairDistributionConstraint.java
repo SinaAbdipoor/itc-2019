@@ -31,7 +31,7 @@ abstract class PairDistributionConstraint extends DistributionConstraint {
     abstract boolean check(Event e1, Event e2) throws NullPointerException;
 
     @Override
-    boolean isSatisfied(Timetable timetable) throws NullPointerException {
+    public boolean isSatisfied(Timetable timetable) throws NullPointerException {
         Event event1, event2;
         for (int i = 0; i < getClasses().length - 1; i++) {
             event1 = timetable.getEvent(getClasses()[i]);
@@ -44,7 +44,7 @@ abstract class PairDistributionConstraint extends DistributionConstraint {
     }
 
     @Override
-    int violationCount(Timetable timetable) throws NullPointerException {
+    public int violationCount(Timetable timetable) throws NullPointerException {
         int count = 0;
         Event event1, event2;
         for (int i = 0; i < getClasses().length - 1; i++) {
