@@ -116,7 +116,7 @@ abstract class Algorithm {
      * @param candidate the new {@link Timetable} candidate solution
      */
     private void replaceSolution(Timetable candidate) {
-        boolean candidateFeasible = candidate.isFeasible();
+        boolean candidateFeasible = candidate.isFeasible(instance);
         int candidateCost = candidate.calcCost(instance.timePenaltyWeight(), instance.roomPenaltyWeight(), instance.studentPenaltyWeight(), instance.distributionPenaltyWeight());
         nfe++;
         if ((cost == -1) || (candidateFeasible && !feasible) || (candidateFeasible == feasible && candidateCost < cost)) {
