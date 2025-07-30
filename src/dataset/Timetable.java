@@ -1,5 +1,7 @@
 package dataset;
 
+import dataset.constraints.HardConstraint;
+
 import java.util.Arrays;
 
 /**
@@ -55,5 +57,11 @@ public class Timetable {
      */
     public Event getEvent(Class aClass) {
         return events[aClass.id() - 1];
+    }
+
+    public boolean isFeasible(ProblemInstance instance) {
+        for (HardConstraint constraint : instance.hardConstraints())
+            if (!constraint.constraint().isSatisfied(this)) return false;
+        return true;
     }
 }
