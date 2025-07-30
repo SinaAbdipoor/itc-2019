@@ -1,7 +1,11 @@
 package solver;
 
+import dataset.Class;
+import dataset.Event;
 import dataset.ProblemInstance;
 import dataset.Timetable;
+
+import java.util.Random;
 
 /**
  * Abstract base class for all optimization algorithms in the ITC 2019 project.
@@ -105,6 +109,24 @@ abstract class Algorithm {
     }
 
     /**
+     * Replaces the current best solution with the given timetable if it is better.
+     * The replacement occurs if the new timetable is feasible and the current is not,
+     * or if the new timetable has a lower cost.
+     *
+     * @param candidate the new {@link Timetable} candidate solution
+     */
+    private void replaceSolution(Timetable candidate) {
+        boolean candidateFeasible = candidate.isFeasible();
+        int candidateCost = candidate.calcCost(instance.timePenaltyWeight(), instance.roomPenaltyWeight(), instance.studentPenaltyWeight(), instance.distributionPenaltyWeight());
+        nfe++;
+        if ((cost == -1) || (candidateFeasible && !feasible) || (candidateFeasible == feasible && candidateCost < cost)) {
+            solution = candidate;
+            feasible = candidateFeasible;
+            cost = candidateCost;
+        }
+    }
+
+    /**
      * Checks whether the termination condition for the algorithm has been reached.
      * <p>
      * The search terminates if either the maximum number of function evaluations ({@code maxNfe})
@@ -134,26 +156,31 @@ abstract class Algorithm {
         return (int) ((System.currentTimeMillis() - startTime - printOverhead) / 1000L);
     }
 
-    /**
-     * Replaces the current best solution with the given timetable if it is better.
-     * The replacement occurs if the new timetable is feasible and the current is not,
-     * or if the new timetable has a lower cost.
-     *
-     * @param candidate the new {@link Timetable} candidate solution
-     */
-    private void replaceSolution(Timetable candidate) {
-        boolean candidateFeasible = candidate.isFeasible();
-        int candidateCost = candidate.calcCost(instance.timePenaltyWeight(), instance.roomPenaltyWeight(), instance.studentPenaltyWeight(), instance.distributionPenaltyWeight());
-        nfe++;
-        if ((candidateFeasible && !feasible) || (candidateFeasible == feasible && candidateCost < cost)) {
-            solution = candidate;
-            feasible = candidateFeasible;
-            cost = candidateCost;
-        }
-    }
-
     @Override
     public String toString() {
         return "Algorithm{" + "name='" + name + '\'' + ", instance=" + instance.instanceName() + ", maxSeconds=" + maxSeconds + ", solution=" + solution + ", nfe=" + nfe + " / " + maxNfe + ", feasible=" + feasible + ", secondsToFeasibility=" + secondsToFeasibility + ", nfeToFeasibility=" + nfeToFeasibility + ", cost=" + cost + '}';
+    }
+
+    /**
+     * Generates a random timetable for the current problem instance.
+     * <p>
+     * This basic generator assigns each event a random valid time slot and a random valid room (if needed) from the
+     * possible options for its class. It does not consider student assignments. This method is intended for generating
+     * initial solutions or for random sampling in optimization algorithms.
+     * </p>
+     *
+     * @return a {@link Timetable} with random time and room assignments for all events
+     */
+    protected Timetable createRandomTimetable() {
+        Random random = new Random();
+        Class theClass;
+        Timetable randomTimetable = new Timetable(instance.getClasses());
+        for (Event event : randomTimetable.getEvents()) {
+            theClass = event.getTheClass();
+            event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
+            if (theClass.possibleRooms() != null)
+                event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+        }
+        return randomTimetable;
     }
 }
