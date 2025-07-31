@@ -49,7 +49,8 @@ abstract class Algorithm {
      * <p>
      * Subclasses must implement this method to create a complete and valid {@link Timetable}
      * for the given {@link ProblemInstance}. The returned timetable should assign every class
-     * to a room and time slot, ensuring that the initial solution is fully specified.
+     * to a room and time slot, ensuring that the initial solution is fully specified. If the initial solution should be
+     * random, use the {@code createRandomTimetable()} method.
      * </p>
      *
      * @return a complete initial {@link Timetable} solution for the problem instance
@@ -117,7 +118,7 @@ abstract class Algorithm {
      */
     private void replaceSolution(Timetable candidate) {
         boolean candidateFeasible = candidate.isFeasible(instance);
-        int candidateCost = candidate.calcCost(instance.timePenaltyWeight(), instance.roomPenaltyWeight(), instance.studentPenaltyWeight(), instance.distributionPenaltyWeight());
+        int candidateCost = candidate.calcCost(instance);
         nfe++;
         if ((cost == -1) || (candidateFeasible && !feasible) || (candidateFeasible == feasible && candidateCost < cost)) {
             solution = candidate;
