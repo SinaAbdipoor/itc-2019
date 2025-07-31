@@ -175,7 +175,7 @@ abstract class Algorithm {
     protected Timetable createRandomTimetable() {
         Random random = new Random();
         Class theClass;
-        Timetable randomTimetable = new Timetable(instance.getClasses());
+        Timetable randomTimetable = new Timetable(instance.classes());
         for (Event event : randomTimetable.getEvents()) {
             theClass = event.getTheClass();
             event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
