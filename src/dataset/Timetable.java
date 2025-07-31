@@ -1,6 +1,7 @@
 package dataset;
 
 import dataset.constraints.HardConstraint;
+import dataset.constraints.SoftConstraint;
 
 import java.util.Arrays;
 
@@ -59,9 +60,89 @@ public class Timetable {
         return events[aClass.id() - 1];
     }
 
+    /**
+     * Checks if this timetable is feasible by verifying that all hard constraints
+     * in the given problem instance are satisfied.
+     *
+     * @param instance The problem instance containing the hard constraints.
+     * @return true if all hard constraints are satisfied; false otherwise.
+     */
     public boolean isFeasible(ProblemInstance instance) {
         for (HardConstraint constraint : instance.hardConstraints())
             if (!constraint.constraint().isSatisfied(this)) return false;
         return true;
+    }
+
+    /**
+     * Calculates the number of student conflicts in this timetable.
+     *
+     * @return The number of student conflicts.
+     */
+    public int calcStudentConflicts() {
+        // TODO: Implement the logic to calculate student conflicts based on the events in this timetable.
+        return 0;
+    }
+
+    /**
+     * Calculates the total time penalty for this timetable.
+     * <p>
+     * Sums the penalty values from all time assignments of the events in this timetable.
+     * </p>
+     *
+     * @return The total time penalty.
+     */
+    public int calcTimePenalty() {
+        int timePenalty = 0;
+        for (Event event : events) {
+            TimeAssignment timeAssignment = event.getTimeAssignment();
+            if (timeAssignment != null) timePenalty += timeAssignment.penalty();
+        }
+        return timePenalty;
+    }
+
+    /**
+     * Calculates the total room penalty for this timetable.
+     * <p>
+     * Sums the penalty values from all room assignments of the events in this timetable.
+     * </p>
+     *
+     * @return The total room penalty.
+     */
+    public int calcRoomPenalty() {
+        int roomPenalty = 0;
+        for (Event event : events) {
+            RoomAssignment roomAssignment = event.getRoomAssignment();
+            if (roomAssignment != null) roomPenalty += roomAssignment.penalty();
+        }
+        return roomPenalty;
+    }
+
+    /**
+     * Calculates the total distribution penalty for this timetable.
+     * <p>
+     * Sums the penalties from all soft constraints in the given problem instance,
+     * as evaluated on this timetable.
+     * </p>
+     *
+     * @param instance The problem instance containing the soft constraints.
+     * @return The total distribution penalty.
+     */
+    public int calcDistributionPenalty(ProblemInstance instance) {
+        int distributionPenalty = 0;
+        for (SoftConstraint constraint : instance.softConstraints()) {
+            distributionPenalty += constraint.calcPenalty(this);
+        }
+        return distributionPenalty;
+    }
+
+    /**
+     * Calculates the total cost of this timetable based on the weighted sum of
+     * student conflicts, time penalties, room penalties, and distribution penalties.
+     *
+     * @param instance The problem instance providing penalty weights.
+     * @return The total cost of the timetable.
+     */
+    public int calcCost(ProblemInstance instance) {
+        return ((instance.studentPenaltyWeight() * calcStudentConflicts()) + (instance.timePenaltyWeight() * calcTimePenalty()) + (instance.roomPenaltyWeight() * calcRoomPenalty()) + (instance.distributionPenaltyWeight() * calcDistributionPenalty(instance)));
     }
 }
