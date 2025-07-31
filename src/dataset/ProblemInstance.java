@@ -9,7 +9,8 @@ import dataset.constraints.SoftConstraint;
 public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int slotsPerDay, int timePenaltyWeight,
                               int roomPenaltyWeight, int distributionPenaltyWeight, int studentPenaltyWeight,
                               Room[] rooms, Course[] courses, HardConstraint[] hardConstraints,
-                              SoftConstraint[] softConstraints, Student[] students, TravelTime travelTimes) {
+                              SoftConstraint[] softConstraints, Student[] students, TravelTime travelTimes,
+                              Class[] classes) {
     /**
      * Constructs a new problem instance object with the provided parameters and performs validation checks.
      *
@@ -27,6 +28,7 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
      * @param softConstraints           An array of soft constraints to be optimized.
      * @param students                  An array of students and their preferences.
      * @param travelTimes               The travel time matrix between rooms.
+     * @param classes                   All the classes in the problem instance.
      * @throws IllegalArgumentException If the provided parameters violate the specified constraints.
      **/
     public ProblemInstance {
@@ -70,6 +72,7 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
         System.out.println("  Students            : " + (students != null ? students.length : "Not Loaded"));
         System.out.println("  Hard Constraints    : " + (hardConstraints != null ? hardConstraints.length : "Not Loaded"));
         System.out.println("  Soft Constraints    : " + (softConstraints != null ? softConstraints.length : "Not Loaded"));
+        System.out.println("  Classes             : " + (classes != null ? classes.length : "Not Loaded"));
 
         int totalConstraints = (hardConstraints != null ? hardConstraints.length : 0) + (softConstraints != null ? softConstraints.length : 0);
         boolean constraintsLoaded = hardConstraints != null || softConstraints != null;
