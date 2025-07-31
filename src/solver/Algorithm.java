@@ -50,7 +50,8 @@ abstract class Algorithm {
      * Subclasses must implement this method to create a complete and valid {@link Timetable}
      * for the given {@link ProblemInstance}. The returned timetable should assign every class
      * to a room and time slot, ensuring that the initial solution is fully specified. If the initial solution should be
-     * random, use the {@code createRandomTimetable()} method.
+     * random, use the {@code createRandomTimetable()} method. There is no need to check feasibility or cost
+     * in this method, as the algorithm will handle that during the search process.
      * </p>
      *
      * @return a complete initial {@link Timetable} solution for the problem instance
@@ -62,7 +63,10 @@ abstract class Algorithm {
      * <p>
      * Subclasses must implement this method to generate and return a new timetable based on the current best solution.
      * The timetable created in this method must be independent and must not modify or interfere with the current best
-     * timetable ({@code solution}). Implementations should use a deep copy of the current solution before making changes.
+     * timetable ({@code solution}). Implementations should use a deep copy of the current solution before making
+     * changes. There is no need to check feasibility or cost in this method, as the algorithm will handle that
+     * during the search process. However, if there are cost evaluation checks involved while generating the candidate
+     * solution, NFE should be incremented accordingly.
      * </p>
      *
      * @return a new {@link Timetable} candidate solution for evaluation.
