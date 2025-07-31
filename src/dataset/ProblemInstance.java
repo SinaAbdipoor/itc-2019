@@ -79,12 +79,7 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
         System.out.println("  Total Constraints   : " + (constraintsLoaded ? totalConstraints : "Not Loaded"));
         System.out.println();
 
-        System.out.print("Travel Time Matrix      : ");
-        if (travelTimes != null) {
-            System.out.println(travelTimes.getRowCount() + " rows");
-        } else {
-            System.out.println("Not Loaded");
-        }
+        System.out.println("Travel Time Matrix     : " + (travelTimes != null ? travelTimes.getRowCount() + " rows" : "Not Loaded"));
         System.out.println("==============================================");
     }
 }
