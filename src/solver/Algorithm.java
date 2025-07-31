@@ -163,7 +163,7 @@ public abstract class Algorithm {
 
     @Override
     public String toString() {
-        return "Algorithm{" + "name='" + name + '\'' + ", instance=" + instance.instanceName() + ", maxSeconds=" + maxSeconds + ", solution=" + solution + ", nfe=" + nfe + " / " + maxNfe + ", feasible=" + feasible + ", secondsToFeasibility=" + secondsToFeasibility + ", nfeToFeasibility=" + nfeToFeasibility + ", cost=" + cost + '}';
+        return "Algorithm{" + "name='" + name + '\'' + ", instance=" + instance.instanceName() + ", maxSeconds=" + maxSeconds + ", solution=" + /*solution +*/ ", nfe=" + nfe + " / " + maxNfe + ", feasible=" + feasible + ", secondsToFeasibility=" + secondsToFeasibility + ", nfeToFeasibility=" + nfeToFeasibility + ", cost=" + cost + '}';
     }
 
     /**
