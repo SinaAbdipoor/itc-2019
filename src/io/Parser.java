@@ -250,8 +250,8 @@ public class Parser {
                 hardConstraints.toArray(new HardConstraint[0]),
                 softConstraints.toArray(new SoftConstraint[0]),
                 studentList.toArray(new Student[0]),
-                travelTime//,
-                // allClassesList.toArray(new Class[0]) // <-- pass all classes here
+                travelTime,
+                allClassesList.toArray(new Class[0]) // <-- pass all classes here
         );
     }
 
