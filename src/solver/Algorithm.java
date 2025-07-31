@@ -11,7 +11,7 @@ import java.util.Random;
  * Abstract base class for all optimization algorithms in the ITC 2019 project.
  * Subclasses must implement initialization and a single search step.
  */
-abstract class Algorithm {
+public abstract class Algorithm {
     private final String name;
     private final ProblemInstance instance;
     private final int maxSeconds;
@@ -33,7 +33,7 @@ abstract class Algorithm {
      * @param maxNfe     Maximum allowed function evaluations (-1 for unlimited).
      * @throws IllegalArgumentException if limits are invalid.
      */
-    Algorithm(String name, ProblemInstance instance, int maxSeconds, int maxNfe) throws IllegalArgumentException {
+    public Algorithm(String name, ProblemInstance instance, int maxSeconds, int maxNfe) throws IllegalArgumentException {
         this.name = name;
         this.instance = instance;
         if (maxSeconds < 1 && maxSeconds != -1)
