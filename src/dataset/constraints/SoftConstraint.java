@@ -33,7 +33,7 @@ public record SoftConstraint(DistributionConstraint constraint, int penalty) {
      * @return The penalty of this soft constraint on the given timetable.
      * @throws NullPointerException If the passed timetable is half or not scheduled.
      */
-    int calcPenalty(Timetable timetable) throws NullPointerException {
+    public int calcPenalty(Timetable timetable) throws NullPointerException {
         if (constraint instanceof MaxDayLoad || constraint instanceof MaxBreaks || constraint instanceof MaxBlock)
             return (penalty * constraint.violationCount(timetable) / timetable.getEvents()[0].getTimeAssignment().time().weeks().length);
         return penalty * constraint.violationCount(timetable);
