@@ -88,7 +88,7 @@ abstract class Algorithm {
      *
      * @return the best {@link Timetable} solution found during the search
      */
-    Timetable run() {
+    public Timetable run() {
         long startTime = System.currentTimeMillis();
         long printOverhead = 0L;
 
