@@ -151,7 +151,7 @@ public class Encoder extends DefaultHandler {
     }
 
     private void createProblemInstance() {
-        problemInstance = new ProblemInstance(instanceName, nrDays, nrWeeks, slotsPerDay, timePenaltyWeight, roomPenaltyWeight, distributionPenaltyWeight, studentPenaltyWeight, rooms, courses, hardConstraints, softConstraints, students, travelTime);
+        problemInstance = new ProblemInstance(instanceName, nrDays, nrWeeks, slotsPerDay, timePenaltyWeight, roomPenaltyWeight, distributionPenaltyWeight, studentPenaltyWeight, rooms, courses, hardConstraints, softConstraints, students, travelTime, allClasses);
     }
 
     /**
