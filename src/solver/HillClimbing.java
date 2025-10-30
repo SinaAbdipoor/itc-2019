@@ -1,11 +1,11 @@
 package solver;
 
+import java.util.Random;
+
 import dataset.Class;
 import dataset.Event;
 import dataset.ProblemInstance;
 import dataset.Timetable;
-
-import java.util.Random;
 
 public class HillClimbing extends Algorithm{
 
@@ -23,23 +23,23 @@ public class HillClimbing extends Algorithm{
     }
 
     @Override
-    Timetable initialize() {
-        return createRandomTimetable();
+    Timetable initialize(final Random random) {
+        return createRandomTimetable(random);
     }
 
     @Override
-    Timetable step() {
-        Random random = new Random();
-        Timetable candidate = solution.deepCopy(instance);
+    Timetable step(final Random random) {
+        Timetable candidate = this.getSolution();
         Class theClass = instance.classes()[random.nextInt(instance.classes().length)];
         Event event = candidate.getEvent(theClass);
-        if (theClass.possibleRooms() == null || random.nextInt(2) == 1)
-            event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
-        else {
-            if (event.getAvailableRooms() != null)
-                event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
-            else
-                event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+        if (theClass.possibleRooms() == null || random.nextInt(2) == 1) {
+			event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
+		} else {
+            if (event.getAvailableRooms() != null) {
+				event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
+			} else {
+				event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+			}
         }
         return candidate;
     }

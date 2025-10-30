@@ -1,31 +1,17 @@
 package solver;
 
+import java.util.Random;
+
 import dataset.Class;
 import dataset.Event;
 import dataset.ProblemInstance;
 import dataset.Timetable;
 
-import java.util.Random;
-
 /**
  * Abstract base class for all optimization algorithms in the ITC 2019 project.
  * Subclasses must implement initialization and a single search step.
  */
-public abstract class Algorithm {
-    public final String name;
-    protected final ProblemInstance instance;
-    private final int maxSeconds;
-    private final long maxNfe;
-    protected Timetable solution;
-    private int nfe = 0;
-    private boolean feasible = false;
-    private int secondsToFeasibility = -1;
-    private int nfeToFeasibility = -1;
-//    private int cost = -1;
-    private int DTF = -1;
-    private int[][] nfeToDTF = new int[100][2];
-    private final int perIndex;
-    private int index;
+public abstract class Algorithm extends LoggingAlgorithm {
     /**
      * Constructor for algorithms with time and evaluation limits.
      * Use -1 for unlimited time or evaluations.
@@ -36,16 +22,8 @@ public abstract class Algorithm {
      * @param maxNfe     Maximum allowed function evaluations (-1 for unlimited).
      * @throws IllegalArgumentException if limits are invalid.
      */
-    public Algorithm(String name, ProblemInstance instance, int maxSeconds, int maxNfe) throws IllegalArgumentException {
-        this.name = name;
-        this.instance = instance;
-        if (maxSeconds < 1 && maxSeconds != -1)
-            throw new IllegalArgumentException("maxSeconds must be positive or -1 for unlimited time.");
-        this.maxSeconds = maxSeconds;
-        if (maxNfe < 1 && maxNfe != -1)
-            throw new IllegalArgumentException("maxNfe must be positive or -1 for unlimited evaluations.");
-        this.maxNfe = maxNfe;
-        this.perIndex = maxSeconds / 100;
+    public Algorithm(String name, ProblemInstance instance, long maxSeconds, long maxNfe) throws IllegalArgumentException {
+    	super(name, instance, maxSeconds, maxNfe);
     }
 
     /**
@@ -60,7 +38,7 @@ public abstract class Algorithm {
      *
      * @return a complete initial {@link Timetable} solution for the problem instance
      */
-    abstract Timetable initialize();
+    abstract Timetable initialize(Random random);
 
     /**
      * Performs a single search step and returns a new {@link Timetable} candidate solution.
@@ -75,7 +53,7 @@ public abstract class Algorithm {
      *
      * @return a new {@link Timetable} candidate solution for evaluation.
      */
-    abstract Timetable step();
+    abstract Timetable step(Random random);
 
     /**
      * Executes the main optimization loop for this algorithm.
@@ -92,30 +70,12 @@ public abstract class Algorithm {
      *
      * @return the best {@link Timetable} solution found during the search
      */
-    public Timetable run() {
-        long startTime = System.currentTimeMillis();
-        long printOverhead = 0L;
-
-        replaceSolution(initialize());
-
-        if (feasible) {
-            secondsToFeasibility = 0;
-            nfeToFeasibility = nfe;
+    @Override
+	public void run(final Random random) {
+        replaceSolution(initialize(random));
+        while (!terminationReached()) {
+            replaceSolution(step(random));
         }
-
-        while (!terminationReached(startTime, printOverhead)) {
-            createNfeToDTF(startTime, printOverhead);
-            long beforePrint = System.currentTimeMillis();
-            System.out.println(this);
-            printOverhead += System.currentTimeMillis() - beforePrint;
-
-            if (feasible && secondsToFeasibility < 0) {
-                secondsToFeasibility = elapsedSeconds(startTime, printOverhead);
-                nfeToFeasibility = nfe;
-            }
-            replaceSolution(step());
-        }
-        return solution;
     }
 
     /**
@@ -125,50 +85,8 @@ public abstract class Algorithm {
      *
      * @param candidate the new {@link Timetable} candidate solution
      */
-    private void replaceSolution(Timetable candidate) {
-        int candidateDTF = candidate.isFeasible(instance);
-        nfe++;
-        if (DTF == -1 || candidateDTF <= DTF) {
-            solution = candidate;
-            DTF = candidateDTF;
-            if (DTF == 0)
-                feasible = true;
-        }
-    }
-
-    /**
-     * Checks whether the termination condition for the algorithm has been reached.
-     * <p>
-     * The search terminates if either the maximum number of function evaluations ({@code maxNfe})
-     * or the maximum allowed time in seconds ({@code maxSeconds}) has been reached.
-     * The elapsed time excludes time spent on printing/reporting.
-     * </p>
-     *
-     * @param startTime     The timestamp (in milliseconds) when the search started.
-     * @param printOverhead The total time (in milliseconds) spent on printing/reporting so far.
-     * @return {@code true} if the termination condition is met; {@code false} otherwise.
-     */
-    private boolean terminationReached(long startTime, long printOverhead) {
-        if (maxNfe > 0 && nfe >= maxNfe) return true;
-        if (maxSeconds > 0 && elapsedSeconds(startTime, printOverhead) >= maxSeconds) return true;
-        return false;
-    }
-
-    /**
-     * Calculates the elapsed time in seconds since the start of the algorithm,
-     * excluding the total time spent on printing or reporting.
-     *
-     * @param startTime     The timestamp (in milliseconds) when the search started.
-     * @param printOverhead The total time (in milliseconds) spent on printing/reporting so far.
-     * @return The elapsed time in seconds, excluding print/report overhead.
-     */
-    private int elapsedSeconds(long startTime, long printOverhead) {
-        return (int) ((System.currentTimeMillis() - startTime - printOverhead) / 1000L);
-    }
-
-    @Override
-    public String toString() {
-        return "Algorithm{" + "name='" + name + '\'' + ", instance=" + instance.instanceName() + ", DTF=" + DTF + ", maxSeconds=" + maxSeconds + /*", solution=" + solution +*/ ", nfe=" + nfe + " / " + maxNfe + ", feasible=" + feasible + ", secondsToFeasibility=" + secondsToFeasibility + ", nfeToFeasibility=" + nfeToFeasibility + '}';
+    final void replaceSolution(Timetable candidate) {
+    	this.evaluate(candidate);
     }
 
     /**
@@ -181,52 +99,20 @@ public abstract class Algorithm {
      *
      * @return a {@link Timetable} with random time and room assignments for all events
      */
-    protected Timetable createRandomTimetable() {
-        Random random = new Random();
+    @Override
+	protected Timetable createRandomTimetable(Random random) {
         Timetable randomTimetable = new Timetable(instance.classes());
         for (Class theClass : instance.classes()) {
             Event event = randomTimetable.getEvent(theClass);
             event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
             if (theClass.possibleRooms() != null) {
-                if (event.getAvailableRooms() != null)
-                    event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
-                else
-                    event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+                if (event.getAvailableRooms() != null) {
+					event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
+				} else {
+					event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+				}
             }
         }
         return randomTimetable;
     }
-
-    private void createNfeToDTF(long startTime, long printOverhead) {
-        if (index * perIndex == elapsedSeconds(startTime, printOverhead) && nfeToDTF[index][0] == 0 && index < 100) {
-            nfeToDTF[index][0] = nfe;
-            nfeToDTF[index][1] = DTF;
-            index++;
-        }
-    }
-
-    protected Timetable getSolution() {
-        return solution;
-    }
-
-    public int[][] getNfeToDTF() {
-        return nfeToDTF;
-    }
-
-    public int getDTF() {
-        return DTF;
-    }
-
-    public int getNfe() {
-        return nfe;
-    }
-
-    public int getSecondsToFeasibility() {
-        return secondsToFeasibility;
-    }
-
-    public int getNfeToFeasibility() {
-        return nfeToFeasibility;
-    }
-
 }

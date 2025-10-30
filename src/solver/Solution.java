@@ -18,11 +18,14 @@ public record Solution(String name, int runTime, int cores, String technique, St
  * @throws IllegalArgumentException if the runTime is less than 1 second, the cores is less than 1, or the timetable is null.
  */
     public Solution{
-        if (runTime < 1)
-            throw new IllegalArgumentException("runTime must be at least 1 second.");
-        if (cores < 1)
-            throw new IllegalArgumentException("cores must be at least 1.");
-        if (timetable == null)
-            throw new IllegalArgumentException("timetable must not be null.");
+        if (runTime < 1) {
+			throw new IllegalArgumentException("runTime must be at least 1 second.");
+		}
+        if (cores < 1) {
+			throw new IllegalArgumentException("cores must be at least 1.");
+		}
+        if (timetable == null) {
+			throw new IllegalArgumentException("timetable must not be null.");
+		}
     }
 }

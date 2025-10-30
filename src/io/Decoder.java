@@ -1,21 +1,25 @@
 package io;
 
-import dataset.Class;
-import dataset.Event;
-import dataset.Student;
-import dataset.Timetable;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.io.File;
+import java.io.Writer;
+import java.time.Instant;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.StringWriter;
-import java.time.Instant;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import dataset.Class;
+import dataset.Event;
+import dataset.Timetable;
 import solver.Solution;
 
 public class Decoder {
@@ -39,6 +43,29 @@ public class Decoder {
             transformer.transform(
                     new DOMSource(document),
                     new StreamResult(outputFile)
+            );
+        } catch (ParserConfigurationException | TransformerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Decoder(Solution solution, Writer dest) {
+        try {
+            File outputDir = new File("./solution");
+            if (!outputDir.exists()) {
+                outputDir.mkdirs();
+            }
+
+            Document document = createXml(solution);
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+            transformer.transform(
+                    new DOMSource(document),
+                    new StreamResult(dest)
             );
         } catch (ParserConfigurationException | TransformerException e) {
             throw new RuntimeException(e);
@@ -71,8 +98,9 @@ public class Decoder {
                 classElement.setAttribute("days", convertToString(e.getTimeAssignment().time().days()));
                 classElement.setAttribute("start", String.valueOf(e.getTimeAssignment().time().start()));
                 classElement.setAttribute("weeks", convertToString(e.getTimeAssignment().time().weeks()));
-                if (e.getRoomAssignment() != null)
-                    classElement.setAttribute("room", String.valueOf(e.getRoomAssignment().room().id()));
+                if (e.getRoomAssignment() != null) {
+					classElement.setAttribute("room", String.valueOf(e.getRoomAssignment().room().id()));
+				}
                 rootElement.appendChild(classElement);
             }
         }
@@ -83,8 +111,9 @@ public class Decoder {
     }
 
     private String convertToString(boolean[] array) {
-        if (array == null)
-            throw new IllegalArgumentException("Array cannot be null");
+        if (array == null) {
+			throw new IllegalArgumentException("Array cannot be null");
+		}
 
         StringBuilder builder = new StringBuilder(array.length);
         for (boolean value : array) {
