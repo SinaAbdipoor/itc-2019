@@ -14,4 +14,8 @@ public record RoomAssignment(Room room, int penalty) {
     public RoomAssignment {
         if (penalty < 0) throw new IllegalArgumentException("Penalty cannot be negative!");
     }
+
+    public RoomAssignment deepCopy() {
+        return new RoomAssignment(this.room, this.penalty);
+    }
 }

@@ -12,17 +12,20 @@ import java.util.Random;
  * Subclasses must implement initialization and a single search step.
  */
 public abstract class Algorithm {
-    private final String name;
-    private final ProblemInstance instance;
+    public final String name;
+    protected final ProblemInstance instance;
     private final int maxSeconds;
-    private final int maxNfe;
-    private Timetable solution;
+    private final long maxNfe;
+    protected Timetable solution;
     private int nfe = 0;
     private boolean feasible = false;
     private int secondsToFeasibility = -1;
     private int nfeToFeasibility = -1;
-    private int cost = -1;
-
+//    private int cost = -1;
+    private int DTF = -1;
+    private int[][] nfeToDTF = new int[100][2];
+    private final int perIndex;
+    private int index;
     /**
      * Constructor for algorithms with time and evaluation limits.
      * Use -1 for unlimited time or evaluations.
@@ -42,6 +45,7 @@ public abstract class Algorithm {
         if (maxNfe < 1 && maxNfe != -1)
             throw new IllegalArgumentException("maxNfe must be positive or -1 for unlimited evaluations.");
         this.maxNfe = maxNfe;
+        this.perIndex = maxSeconds / 100;
     }
 
     /**
@@ -100,6 +104,7 @@ public abstract class Algorithm {
         }
 
         while (!terminationReached(startTime, printOverhead)) {
+            createNfeToDTF(startTime, printOverhead);
             long beforePrint = System.currentTimeMillis();
             System.out.println(this);
             printOverhead += System.currentTimeMillis() - beforePrint;
@@ -121,13 +126,13 @@ public abstract class Algorithm {
      * @param candidate the new {@link Timetable} candidate solution
      */
     private void replaceSolution(Timetable candidate) {
-        boolean candidateFeasible = candidate.isFeasible(instance);
-        int candidateCost = candidate.calcCost(instance);
+        int candidateDTF = candidate.isFeasible(instance);
         nfe++;
-        if ((cost == -1) || (candidateFeasible && !feasible) || (candidateFeasible == feasible && candidateCost < cost)) {
+        if (DTF == -1 || candidateDTF <= DTF) {
             solution = candidate;
-            feasible = candidateFeasible;
-            cost = candidateCost;
+            DTF = candidateDTF;
+            if (DTF == 0)
+                feasible = true;
         }
     }
 
@@ -163,7 +168,7 @@ public abstract class Algorithm {
 
     @Override
     public String toString() {
-        return "Algorithm{" + "name='" + name + '\'' + ", instance=" + instance.instanceName() + ", maxSeconds=" + maxSeconds + ", solution=" + /*solution +*/ ", nfe=" + nfe + " / " + maxNfe + ", feasible=" + feasible + ", secondsToFeasibility=" + secondsToFeasibility + ", nfeToFeasibility=" + nfeToFeasibility + ", cost=" + cost + '}';
+        return "Algorithm{" + "name='" + name + '\'' + ", instance=" + instance.instanceName() + ", DTF=" + DTF + ", maxSeconds=" + maxSeconds + /*", solution=" + solution +*/ ", nfe=" + nfe + " / " + maxNfe + ", feasible=" + feasible + ", secondsToFeasibility=" + secondsToFeasibility + ", nfeToFeasibility=" + nfeToFeasibility + '}';
     }
 
     /**
@@ -178,14 +183,50 @@ public abstract class Algorithm {
      */
     protected Timetable createRandomTimetable() {
         Random random = new Random();
-        Class theClass;
         Timetable randomTimetable = new Timetable(instance.classes());
-        for (Event event : randomTimetable.getEvents()) {
-            theClass = event.getTheClass();
+        for (Class theClass : instance.classes()) {
+            Event event = randomTimetable.getEvent(theClass);
             event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
-            if (theClass.possibleRooms() != null)
-                event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+            if (theClass.possibleRooms() != null) {
+                if (event.getAvailableRooms() != null)
+                    event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
+                else
+                    event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+            }
         }
         return randomTimetable;
     }
+
+    private void createNfeToDTF(long startTime, long printOverhead) {
+        if (index * perIndex == elapsedSeconds(startTime, printOverhead) && nfeToDTF[index][0] == 0 && index < 100) {
+            nfeToDTF[index][0] = nfe;
+            nfeToDTF[index][1] = DTF;
+            index++;
+        }
+    }
+
+    protected Timetable getSolution() {
+        return solution;
+    }
+
+    public int[][] getNfeToDTF() {
+        return nfeToDTF;
+    }
+
+    public int getDTF() {
+        return DTF;
+    }
+
+    public int getNfe() {
+        return nfe;
+    }
+
+    public int getSecondsToFeasibility() {
+        return secondsToFeasibility;
+    }
+
+    public int getNfeToFeasibility() {
+        return nfeToFeasibility;
+    }
+
 }

@@ -14,4 +14,8 @@ public record TimeAssignment(Time time, int penalty) {
     public TimeAssignment {
         if (penalty < 0) throw new IllegalArgumentException("Penalty cannot be negative!");
     }
+
+    public TimeAssignment deepCopy() {
+        return new TimeAssignment(this.time, this.penalty);
+    }
 }

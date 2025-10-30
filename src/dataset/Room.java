@@ -1,5 +1,7 @@
 package dataset;
 
+import utils.LogicalOperators;
+
 /**
  * <p>This class represents rooms as defined in the ITC 2019. Each room is specified by its id and capacity. A room may
  * not be available at certain times, which are defined by unavailable elements using the days of the week, the start
@@ -26,5 +28,13 @@ public record Room(int id, int capacity, Time[] unavailable) {
     public Room {
         if (id < 1) throw new IllegalArgumentException("Room id cannot be less than 1!");
         if (capacity < 0) throw new IllegalArgumentException("Room capacity cannot be negative!");
+    }
+
+    public boolean isAvailable(Time time) {
+        for (Time t : unavailable) {
+            if ((time.start() < t.end()) && (t.start() < time.end()) && (!LogicalOperators.areExclusive(t.days(), time.days())) && (!LogicalOperators.areExclusive(t.weeks(), time.weeks())))
+                return false;
+        }
+        return true;
     }
 }

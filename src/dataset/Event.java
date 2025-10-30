@@ -122,4 +122,30 @@ public class Event {
         // COMMENT UNTIL HERE!
         students.add(student);
     }
+
+    public RoomAssignment[] getAvailableRooms() {
+        ArrayList<RoomAssignment> availableRooms = new ArrayList<>();
+        boolean haveAvailable = false;
+        for (RoomAssignment r : theClass.possibleRooms()) {
+            if (r.room().isAvailable(timeAssignment.time())) {
+                availableRooms.add(r);
+                haveAvailable = true;
+            }
+        }
+        if (!haveAvailable)
+            return null;
+        else
+            return availableRooms.toArray(new RoomAssignment[0]);
+    }
+
+    public Event deepCopy() {
+        Event copy = new Event(theClass);
+        if (this.timeAssignment != null)
+            copy.timeAssignment = this.timeAssignment.deepCopy();
+        else copy.roomAssignment = null;
+        if (this.roomAssignment != null)
+            copy.roomAssignment = this.roomAssignment.deepCopy();
+        else copy.roomAssignment = null;
+        return copy;
+    }
 }

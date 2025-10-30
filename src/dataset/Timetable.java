@@ -2,6 +2,7 @@ package dataset;
 
 import dataset.constraints.HardConstraint;
 import dataset.constraints.SoftConstraint;
+import utils.LogicalOperators;
 
 import java.util.Arrays;
 
@@ -16,7 +17,7 @@ import java.util.Arrays;
  * event[2] -> class[id=3], etc.</p>
  */
 public class Timetable {
-    private final Event[] events;
+    private Event[] events;
 
     /**
      * Constructs an empty timetable (a group of unscheduled events) based on the passed classes. <strong>Make sure the
@@ -28,7 +29,7 @@ public class Timetable {
      * @throws IndexOutOfBoundsException When the ids of the passed classes are not sequential.
      */
     public Timetable(Class[] classes) throws IllegalArgumentException, IndexOutOfBoundsException {
-        events = new Event[classes.length];
+        events = new Event[classes[classes.length - 1].id()];
         for (Class aClass : classes) {
             if (events[aClass.id() - 1] != null)
                 throw new IllegalArgumentException("Multiple classes with the same id have been found!");
@@ -67,10 +68,12 @@ public class Timetable {
      * @param instance The problem instance containing the hard constraints.
      * @return true if all hard constraints are satisfied; false otherwise.
      */
-    public boolean isFeasible(ProblemInstance instance) {
+    public int isFeasible(ProblemInstance instance) {
+        int DTF = 0;
+        DTF += isValidAssignment();
         for (HardConstraint constraint : instance.hardConstraints())
-            if (!constraint.constraint().isSatisfied(this)) return false;
-        return true;
+            if (!constraint.constraint().isSatisfied(this)) DTF++;
+        return DTF;
     }
 
     /**
@@ -94,8 +97,10 @@ public class Timetable {
     public int calcTimePenalty() {
         int timePenalty = 0;
         for (Event event : events) {
-            TimeAssignment timeAssignment = event.getTimeAssignment();
-            if (timeAssignment != null) timePenalty += timeAssignment.penalty();
+            if (event != null) {
+                TimeAssignment timeAssignment = event.getTimeAssignment();
+                if (timeAssignment != null) timePenalty += timeAssignment.penalty();
+            }
         }
         return timePenalty;
     }
@@ -111,6 +116,7 @@ public class Timetable {
     public int calcRoomPenalty() {
         int roomPenalty = 0;
         for (Event event : events) {
+            if (event == null) break;
             RoomAssignment roomAssignment = event.getRoomAssignment();
             if (roomAssignment != null) roomPenalty += roomAssignment.penalty();
         }
@@ -129,6 +135,8 @@ public class Timetable {
      */
     public int calcDistributionPenalty(ProblemInstance instance) {
         int distributionPenalty = 0;
+        if (instance.softConstraints() == null)
+            return distributionPenalty;
         for (SoftConstraint constraint : instance.softConstraints()) {
             distributionPenalty += constraint.calcPenalty(this);
         }
@@ -144,5 +152,47 @@ public class Timetable {
      */
     public int calcCost(ProblemInstance instance) {
         return ((instance.studentPenaltyWeight() * calcStudentConflicts()) + (instance.timePenaltyWeight() * calcTimePenalty()) + (instance.roomPenaltyWeight() * calcRoomPenalty()) + (instance.distributionPenaltyWeight() * calcDistributionPenalty(instance)));
+    }
+
+    public int isValidAssignment() {
+        int invalidNum = 0;
+
+        for (Event e : events) {
+            if (e != null && e.getRoomAssignment() != null) {
+                if (!e.getRoomAssignment().room().isAvailable(e.getTimeAssignment().time()))
+                    invalidNum ++;
+            }
+        }
+
+        for (int i=0; i < events.length; i++) {
+            Event e1 = events[i];
+            if (e1 != null && e1.getRoomAssignment() != null) {
+                for (int j=i+1; j<events.length; j++) {
+                    Event e2 = events[j];
+                    if (e2 != null && e2.getRoomAssignment() != null) {
+                        if (e1.getRoomAssignment().room() == e2.getRoomAssignment().room()) {
+                            if ((e1.getTimeAssignment().time().start() < e2.getTimeAssignment().time().end()) && (e2.getTimeAssignment().time().start() < e1.getTimeAssignment().time().end()) && (!LogicalOperators.areExclusive(e2.getTimeAssignment().time().days(), e1.getTimeAssignment().time().days())) && (!LogicalOperators.areExclusive(e2.getTimeAssignment().time().weeks(), e1.getTimeAssignment().time().weeks())))
+                                invalidNum++;
+                        }
+                    }
+                }
+            }
+        }
+        return invalidNum;
+    }
+
+    public Timetable deepCopy(ProblemInstance instance) {
+        Timetable copy = new Timetable(instance.classes());
+        Event[] eventsCopy = new Event[this.events.length];
+
+        for (int i=0; i < this.events.length; i++) {
+            if (this.events[i] != null)
+                eventsCopy[i] = this.events[i].deepCopy();
+            else
+                eventsCopy[i] = null;
+        }
+
+        copy.events = eventsCopy;
+        return copy;
     }
 }

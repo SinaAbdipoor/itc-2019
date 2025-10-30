@@ -3,6 +3,9 @@ package dataset;
 import dataset.constraints.HardConstraint;
 import dataset.constraints.SoftConstraint;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * This class represents a problem instance of the International Timetabling Competition (ITC) 2019 dataset.
  */
@@ -44,6 +47,7 @@ public record ProblemInstance(String instanceName, int nrDays, int nrWeeks, int 
             throw new IllegalArgumentException("The distribution penalty weight cannot be negative!");
         if (studentPenaltyWeight < 0)
             throw new IllegalArgumentException("The student penalty weight cannot be negative!");
+        Arrays.sort(classes, Comparator.comparingInt(Class::id));
     }
 
     /**
