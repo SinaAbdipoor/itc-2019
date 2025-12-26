@@ -21,7 +21,7 @@ public class Main {
             }
             System.out.println("Step 2: Initializing algorithm...");
             int maxSeconds = Integer.parseInt(args[1]);
-//            int maxSeconds = 1000;
+//            int maxSeconds = 100;
 //            RandomSearch randomSearch = new RandomSearch(instance, maxSeconds, -1);
 //            HillClimbing hillClimbing = new HillClimbing(instance, maxSeconds, -1);
             HillClimbingWithRS hillClimbingWithRS = new HillClimbingWithRS(instance, maxSeconds, -1);
