@@ -1,6 +1,6 @@
 $inputDirectory = "C:\Users\Administrator\Desktop\Sina\ITC2019\Dataset\Original\All\Half2"
 $files = Get-ChildItem $inputDirectory
-$maxSeconds = 43200
+$maxSeconds = 14400
 
 Write-Output "Processing files in $inputDirectory ..."
 
