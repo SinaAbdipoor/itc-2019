@@ -262,7 +262,7 @@ public abstract class LoggingAlgorithm {
 						bw.write("#");
 						bw.newLine();
 						new Decoder(new Solution(this.instance.instanceName(), (int) (this.maxMilliSeconds / 1000L), 1,
-								clazzName, "Team Abdipoor", "Bejing/Hefei/Malaysia", "China and Malaysia",
+								clazzName, "ScholORs", "Bejing/Hefei/Malaysia", "China and Malaysia",
 								this.solution), bw);
 					}
 				}
