@@ -219,7 +219,7 @@ public abstract class LoggingAlgorithm {
 						bw.newLine();
 						for (final LogEntry line : this.log) {
 							bw.write(String.valueOf(line.fes()) + ";" + String.valueOf(line.time() - this.startTime)
-									+ ";" + String.valueOf(line.f() - 2147483648L));
+									+ ";" + String.valueOf(line.f()));
 							bw.newLine();
 
 						}
