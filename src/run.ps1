@@ -1,4 +1,4 @@
-$inputDirectory = "C:\Users\Administrator\Desktop\Sina\ITC2019\Dataset\Original\All\Half2"
+$inputDirectory = "C:\Users\Administrator\Documents\GitHub\itc-2019\src\Half2"
 $files = Get-ChildItem $inputDirectory
 $maxSeconds = 14400
 
