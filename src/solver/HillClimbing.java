@@ -43,4 +43,24 @@ public class HillClimbing extends Algorithm{
         }
         return candidate;
     }
+
+    Timetable BigStep(final Random random) {
+        Timetable candidate = this.getSolution();
+        boolean first = true;
+        while (first || random.nextInt(5) > 0) {
+            first = false;
+            Class theClass = instance.classes()[random.nextInt(instance.classes().length)];
+            Event event = candidate.getEvent(theClass);
+            if (theClass.possibleRooms() == null || random.nextInt(2) == 1) {
+                event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
+            } else {
+                if (event.getAvailableRooms() != null) {
+                    event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
+                } else {
+                    event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+                }
+            }
+        }
+        return candidate;
+    }
 }

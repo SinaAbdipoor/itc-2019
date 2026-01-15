@@ -1,13 +1,13 @@
 package solver;
 
-import java.util.Random;
-
 import dataset.Class;
 import dataset.Event;
 import dataset.ProblemInstance;
 import dataset.Timetable;
 
-public class HillClimbingWithRS extends LoggingAlgorithm {
+import java.util.Random;
+
+public class HillClimbingWithRS_2 extends LoggingAlgorithm {
 
 	/**
 	 * Constructor for algorithms with time and evaluation limits. Use -1 for
@@ -19,8 +19,8 @@ public class HillClimbingWithRS extends LoggingAlgorithm {
 	 * @param maxNfe     Maximum allowed function evaluations (-1 for unlimited).
 	 * @throws IllegalArgumentException if limits are invalid.
 	 */
-	public HillClimbingWithRS(ProblemInstance instance, int maxSeconds, int maxNfe) throws IllegalArgumentException {
-		super("Hill Climbing RS", instance, maxSeconds, maxNfe);
+	public HillClimbingWithRS_2(ProblemInstance instance, int maxSeconds, int maxNfe) throws IllegalArgumentException {
+		super("Hill Climbing SoftRS", instance, maxSeconds, maxNfe);
 	}
 
 	/**
@@ -45,11 +45,14 @@ public class HillClimbingWithRS extends LoggingAlgorithm {
 		long best_f = Long.MAX_VALUE;
 		long luby_idx = 0;
 
+		best_x = createRandomTimetable(random);
+		best_f = this.evaluate(best_x);
+
 		while (!terminationReached()) {
 			if (--fes_until_reset <= 0L) {
-				best_x = createRandomTimetable(random);
+				best_x = BigStep(random, best_x);
 				best_f = this.evaluate(best_x);
-				fes_until_reset = 100000L * luby(++luby_idx);
+				fes_until_reset = 1000L * luby(++luby_idx);
 			} else {
 				Timetable new_x = this.step(random, best_x);
 				long new_f = this.evaluate(new_x);
@@ -97,6 +100,26 @@ public class HillClimbingWithRS extends LoggingAlgorithm {
 				event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
 			} else {
 				event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+			}
+		}
+		return candidate;
+	}
+
+	Timetable BigStep(final Random random, Timetable use_x) {
+		Timetable candidate = use_x.deepCopy(instance);
+		boolean first = true;
+		while (first || random.nextInt(5) > 0) {
+			first = false;
+			Class theClass = instance.classes()[random.nextInt(instance.classes().length)];
+			Event event = candidate.getEvent(theClass);
+			if (theClass.possibleRooms() == null || random.nextInt(2) == 1) {
+				event.setTimeAssignment(theClass.possibleTimes()[random.nextInt(theClass.possibleTimes().length)]);
+			} else {
+				if (event.getAvailableRooms() != null) {
+					event.setRoomAssignment(event.getAvailableRooms()[random.nextInt(event.getAvailableRooms().length)]);
+				} else {
+					event.setRoomAssignment(theClass.possibleRooms()[random.nextInt(theClass.possibleRooms().length)]);
+				}
 			}
 		}
 		return candidate;
