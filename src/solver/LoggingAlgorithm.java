@@ -128,6 +128,7 @@ public abstract class LoggingAlgorithm {
 			if (f < this.best) {
 				this.best = f;
 				this.log.add(new LogEntry(fes, System.currentTimeMillis(), f));
+				System.out.println(fes + ";" + (f - 2147483648L));
 			}
 		}
 		return f;
