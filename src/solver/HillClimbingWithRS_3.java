@@ -43,17 +43,20 @@ public class HillClimbingWithRS_3 extends LoggingAlgorithm {
 
 		Timetable best_x = null;
 		long best_f = Long.MAX_VALUE;
-		long luby_idx = 0;
+		long luby_idx = 1;
 		long stuck_degree = 0L;
 		boolean lock = false;
 		long lock_times = 0L;
 		int num_classes = instance.classes().length;
-		int factor = 50;
+		int factor = 20;
 		long baseThreshold = (long) num_classes * factor;
-		long benchmark = best_f;
+		int consecutive_fails = 0;
+
+		final int WARP_THRESHOLD = 15;
 
 		best_x = createRandomTimetable(random);
 		best_f = this.evaluate(best_x);
+		long benchmark = best_f;
 
 		while (!terminationReached()) {
 			if (!lock) {
@@ -68,26 +71,41 @@ public class HillClimbingWithRS_3 extends LoggingAlgorithm {
 					best_f = new_f;
 					best_x = new_x;
 				}
-				if (stuck_degree >= baseThreshold * luby(luby_idx + 1))
+				if (stuck_degree >= baseThreshold * luby(luby_idx))
 					lock = true;
 			}
 			else {
+				String engineStatus = "Idle";
+
 				if (best_f < benchmark) {
-					luby_idx = 0;
+					luby_idx = 1;
+					consecutive_fails = 0;
 					benchmark = best_f;
-				} else {
-					luby_idx++;
+					engineStatus = "Cooling Down";
+				}
+				else {
+					consecutive_fails++;
+					if (consecutive_fails < WARP_THRESHOLD) {
+						luby_idx++;
+						engineStatus = "Linear Accel";
+					}
+					else {
+						consecutive_fails = consecutive_fails / 2;
+						if (luby_idx == 0) luby_idx = 1;
+						luby_idx = luby_idx + 50;
+						engineStatus = "WARP IMPULSE";
+					}
 				}
 				// Reset & improve
 				lock_times++;
 				lock = false;
 				stuck_degree = 0L;
 
-				best_x = BigStep(random, best_x, luby(luby_idx + 1));
+				best_x = BigStep(random, best_x, luby(luby_idx));
 				best_f = this.evaluate(best_x);
 
-				System.out.printf("[Restart #%d] Factor=%d, Base=%d, LubyNext=%d, LubyId=%d%n",
-						lock_times, factor, baseThreshold, luby(luby_idx + 1), luby_idx);
+				System.out.printf("[Restart #%d] Status=%s, Failures=%d, LubyID=%d, NextLuby=%d%n",
+						lock_times, engineStatus, consecutive_fails, luby_idx, luby(luby_idx));
 			}
 		}
 	}
@@ -136,7 +154,7 @@ public class HillClimbingWithRS_3 extends LoggingAlgorithm {
 	Timetable BigStep(final Random random, Timetable use_x, long currentLuby) {
 		Timetable candidate = use_x.deepCopy(instance);
 		boolean first = true;
-		long strength = 5L + (long)(Math.log(2*currentLuby) / Math.log(2));
+		long strength = 5L + (long)(Math.log(currentLuby) / Math.log(2));
 
 		while (first || random.nextInt((int)strength) > 0) {
 			first = false;

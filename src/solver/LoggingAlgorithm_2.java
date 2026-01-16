@@ -1,22 +1,22 @@
 package solver;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Random;
-
 import dataset.Class;
 import dataset.Event;
 import dataset.ProblemInstance;
 import dataset.Timetable;
 import io.Decoder;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * Abstract base class for all optimization algorithms in the ITC 2019 project.
  * Subclasses must implement initialization and a single search step.
  */
-public abstract class LoggingAlgorithm {
+public abstract class LoggingAlgorithm_2 {
 	// the offset of the DTF
 	private static final long DF_OFFSET = Integer.MAX_VALUE + 1L;
 	public final String name;
@@ -43,7 +43,7 @@ public abstract class LoggingAlgorithm {
 	 * @param maxNfe     Maximum allowed function evaluations (-1 for unlimited).
 	 * @throws IllegalArgumentException if limits are invalid.
 	 */
-	public LoggingAlgorithm(String name, ProblemInstance instance, long maxSeconds, long maxNfe)
+	public LoggingAlgorithm_2(String name, ProblemInstance instance, long maxSeconds, long maxNfe)
 			throws IllegalArgumentException {
 		this.name = name;
 		this.instance = instance;
@@ -141,7 +141,7 @@ public abstract class LoggingAlgorithm {
 	 *         otherwise.
 	 */
 	protected final boolean terminationReached() {
-		return ((nfe >= maxNfe) || (System.currentTimeMillis() >= this.endTime) || (this.best < DF_OFFSET));
+		return ((nfe >= maxNfe) || (System.currentTimeMillis() >= this.endTime));
 	}
 
 	@Override
