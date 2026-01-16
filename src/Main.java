@@ -19,19 +19,19 @@ public class Main {
             }
             System.out.println("Step 2: Initializing algorithm...");
             int maxSeconds = Integer.parseInt(args[1]);
-//            int maxSeconds = 100;
+//            int maxSeconds = 500;
 //            RandomSearch randomSearch = new RandomSearch(instance, maxSeconds, -1);
 //            HillClimbing hillClimbing = new HillClimbing(instance, maxSeconds, -1);
 //            HillClimbingWithRS hillClimbingWithRS = new HillClimbingWithRS(instance, maxSeconds, -1);
-            HillClimbingWithRS_2 hillClimbingWithRS_2 = new HillClimbingWithRS_2(instance, maxSeconds, -1);
+            HillClimbingWithRS_3 hillClimbingWithRS_3 = new HillClimbingWithRS_3(instance, maxSeconds, -1);
             System.out.println("Algorithm initialized successfully!");
             System.out.println("Step 3: Running algorithm...");
 //            Timetable timetable = randomSearch.run();
 //            Timetable timetable = hillClimbing.run();
-            Timetable timetable = hillClimbingWithRS_2.run();
+            Timetable timetable = hillClimbingWithRS_3.run();
 //            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, randomSearch.name, "Mingxuan", "Beijing University of Posts and Telecommunications", "China", timetable);
 //            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, hillClimbing.name, "Mingxuan", "Beijing University of Posts and Telecommunications", "China", timetable);
-            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, hillClimbingWithRS_2.name, "Mingxuan", "Queen Mary University of London", "China", timetable);
+            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, hillClimbingWithRS_3.name, "Mingxuan", "Queen Mary University of London", "China", timetable);
             System.out.println("DTF: " + solution.timetable().isFeasible(instance) +
                     ", TimePenalty: " + solution.timetable().calcTimePenalty() +
                     ", RoomPenalty: " + solution.timetable().calcRoomPenalty() +
