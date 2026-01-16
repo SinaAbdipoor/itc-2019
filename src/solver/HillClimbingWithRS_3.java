@@ -48,7 +48,7 @@ public class HillClimbingWithRS_3 extends LoggingAlgorithm {
 		boolean lock = false;
 		long lock_times = 0L;
 		int num_classes = instance.classes().length;
-		int factor = 20;
+		int factor = 50;
 		long baseThreshold = (long) num_classes * factor;
 		long benchmark = best_f;
 
