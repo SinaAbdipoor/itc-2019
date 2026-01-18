@@ -10,16 +10,16 @@ public class Main {
             System.out.println("Step 1: Loading problem instance...");
             ProblemInstance instance = null;
             try {
-                instance = new Encoder(args[0]).getProblemInstance();
-//                instance = new Encoder("/Users/mingxuan/OR/itc/xml/agh-h-spr17.xml").getProblemInstance();
+//                instance = new Encoder(args[0]).getProblemInstance();
+                instance = new Encoder("/Users/mingxuan/OR/itc/itc-2019/src/Half1/agh-fis-spr17_postcompetition2.xml").getProblemInstance();
                 System.out.println("Problem instance loaded successfully!");
                 instance.printStats();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             System.out.println("Step 2: Initializing algorithm...");
-            int maxSeconds = Integer.parseInt(args[1]);
-//            int maxSeconds = 10000;
+//            int maxSeconds = Integer.parseInt(args[1]);
+            int maxSeconds = 100;
 //            RandomSearch randomSearch = new RandomSearch(instance, maxSeconds, -1);
 //            HillClimbing hillClimbing = new HillClimbing(instance, maxSeconds, -1);
             HillClimbingWithRS hillClimbingWithRS = new HillClimbingWithRS(instance, maxSeconds, -1);

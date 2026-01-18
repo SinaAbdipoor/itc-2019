@@ -49,7 +49,7 @@ public class HillClimbingWithRS extends LoggingAlgorithm {
 			if (--fes_until_reset <= 0L) {
 				best_x = createRandomTimetable(random);
 				best_f = this.evaluate(best_x);
-				fes_until_reset = 100000L * luby(++luby_idx);
+				fes_until_reset = 1000000L * luby(++luby_idx);
 			} else {
 				Timetable new_x = this.step(random, best_x);
 				long new_f = this.evaluate(new_x);
