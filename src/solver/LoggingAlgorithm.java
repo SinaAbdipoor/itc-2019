@@ -128,7 +128,6 @@ public abstract class LoggingAlgorithm {
 			if (f < this.best) {
 				this.best = f;
 				this.log.add(new LogEntry(fes, System.currentTimeMillis(), f));
-				System.out.println(fes + ";" + (f - 2147483648L));
 			}
 		}
 		return f;
@@ -141,7 +140,7 @@ public abstract class LoggingAlgorithm {
 	 *         otherwise.
 	 */
 	protected final boolean terminationReached() {
-		return ((nfe >= maxNfe) || (System.currentTimeMillis() >= this.endTime) || (this.best < DF_OFFSET));
+		return ((nfe >= maxNfe) || (System.currentTimeMillis() >= this.endTime));
 	}
 
 	@Override
