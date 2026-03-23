@@ -21,19 +21,19 @@ public class Main {
             int maxSeconds = Integer.parseInt(args[1]);
 //            int maxSeconds = 100;
 //            RandomSearch randomSearch = new RandomSearch(instance, maxSeconds, -1);
-//            HillClimbing hillClimbing = new HillClimbing(instance, maxSeconds, -1);
-            HillClimbingWithRS hillClimbingWithRS = new HillClimbingWithRS(instance, maxSeconds, -1);
+            HillClimbing hillClimbing = new HillClimbing(instance, maxSeconds, -1);
+//            HillClimbingWithRS hillClimbingWithRS = new HillClimbingWithRS(instance, maxSeconds, -1);
 //            FRLS frls = new FRLS(instance, maxSeconds, -1);
             System.out.println("Algorithm initialized successfully!");
             System.out.println("Step 3: Running algorithm...");
 //            Timetable timetable = randomSearch.run();
-//            Timetable timetable = hillClimbing.run();
-            Timetable timetable = hillClimbingWithRS.run();
+            Timetable timetable = hillClimbing.run();
+//            Timetable timetable = hillClimbingWithRS.run();
 //            Timetable timetable = frls.run();
 //            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, randomSearch.name, "Mingxuan", "Beijing University of Posts and Telecommunications", "China", timetable);
-//            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, hillClimbing.name, "Mingxuan", "Beijing University of Posts and Telecommunications", "China", timetable);
+            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, hillClimbing.name, "Mingxuan", "Beijing University of Posts and Telecommunications", "China", timetable);
 //            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, frls.name, "Mingxuan", "Beijing University of Posts and Telecommunications", "China", timetable);
-            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, hillClimbingWithRS.name, "Mingxuan", "Queen Mary University of London", "China", timetable);
+//            Solution solution = new Solution(instance.instanceName(), maxSeconds, 4, hillClimbingWithRS.name, "Mingxuan", "Queen Mary University of London", "China", timetable);
             System.out.println("DTF: " + solution.timetable().isFeasible(instance) +
                     ", TimePenalty: " + solution.timetable().calcTimePenalty() +
                     ", RoomPenalty: " + solution.timetable().calcRoomPenalty() +
